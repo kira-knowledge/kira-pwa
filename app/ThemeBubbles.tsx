@@ -22,7 +22,7 @@ export default function ThemeBubbles({ themes }: Props) {
           key={t.name}
           className={styles.bubble}
           title={t.why}
-          onClick={() => router.push(`/chat?theme=${encodeURIComponent(t.name)}`)}
+          onClick={() => router.push(`/category/${encodeURIComponent(t.name)}`)}
         >
           {t.name}
           <span className={styles.bubbleCount}>{t.count}</span>

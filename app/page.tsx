@@ -5,8 +5,11 @@ import { useRouter } from "next/navigation";
 import styles from "./page.module.css";
 import InstallPrompt from "./InstallPrompt";
 import ThemeBubbles, { Theme } from "./ThemeBubbles";
+import PostCard from "../components/PostCard";
+import BottomNav from "../components/BottomNav";
 
 type Item = {
+  id: string;
   title: string;
   summary: string;
   tags: string[];
@@ -102,39 +105,11 @@ export default function Library() {
 
       <section className={styles.grid}>
         {items?.map((it) => (
-          <article key={it.source_url} className={styles.card}>
-            {it.thumbnail ? (
-              <img
-                className={styles.thumb}
-                src={it.thumbnail}
-                alt=""
-                onError={(e) => {
-                  (e.target as HTMLImageElement).style.display = "none";
-                }}
-              />
-            ) : (
-              <div className={styles.thumbFallback} />
-            )}
-            <div className={styles.body}>
-              <h2 className={styles.title}>{it.title}</h2>
-              <p className={styles.summary}>{it.summary}</p>
-              <div className={styles.tags}>
-                {it.tags?.map((t, j) => (
-                  <span key={j} className={styles.tag}>
-                    #{t}
-                  </span>
-                ))}
-              </div>
-              <div className={styles.meta}>
-                <span>@{it.author}</span>
-                <a href={it.source_url} target="_blank" rel="noreferrer">
-                  source ↗
-                </a>
-              </div>
-            </div>
-          </article>
+          <PostCard key={it.id} item={it} />
         ))}
       </section>
+
+      <BottomNav active="home" />
     </main>
   );
 }
