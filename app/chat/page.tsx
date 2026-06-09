@@ -5,7 +5,7 @@ import { useRouter, useSearchParams } from "next/navigation";
 import styles from "./chat.module.css";
 import AnswerWithCitations from "../../components/AnswerWithCitations";
 import SourceCard from "../../components/SourceCard";
-import { ChatRecord, Citation, appendHistory, loadHistory } from "../../lib/chatHistory";
+import { ChatRecord, Citation, appendHistory, findById, loadHistory } from "../../lib/chatHistory";
 
 type ChatResponse = {
   answer: string;
@@ -22,7 +22,10 @@ const makeId = () => `${Date.now()}-${Math.random().toString(36).slice(2, 8)}`;
 function ChatInner() {
   const router = useRouter();
   const params = useSearchParams();
-  const [status, setStatus] = useState<"idle" | "loading" | "answered" | "error">("idle");
+  const hasIntent = !!(params.get("theme") || params.get("q") || params.get("history"));
+  const [status, setStatus] = useState<"idle" | "loading" | "answered" | "error">(
+    hasIntent ? "loading" : "idle"
+  );
   const [current, setCurrent] = useState<ChatRecord | null>(null);
   const [history, setHistory] = useState<ChatRecord[]>([]);
   const [input, setInput] = useState("");
@@ -68,6 +71,18 @@ function ChatInner() {
     started.current = true;
     const q = params.get("q");
     const theme = params.get("theme");
+    const hist = params.get("history");
+    if (hist) {
+      const rec = findById(hist);
+      if (rec) {
+        setCurrent(rec);
+        setTitle(rec.theme ?? "Ask KIRA");
+        setStatus("answered");
+      } else {
+        setStatus("idle");
+      }
+      return;
+    }
     if (theme) {
       setTitle(theme);
       (async () => {
