@@ -1,0 +1,34 @@
+:root {
+  --ink: #1a1a1d;
+  --muted: #747680;
+  --navy: #0e3057;
+  --navy-deep: #052d47;
+  --accent: #4a7fa5;
+  --border: #d9dee5;
+  --card: #ffffff;
+  --pill: #fefdfc;
+  --nav-bg: rgba(251, 252, 253, 0.8);
+  --radius-card: 10px;
+  --radius-pill: 25px;
+}
+
+html,
+body {
+  margin: 0;
+  min-height: 100vh;
+  color: var(--ink);
+  background: #f9f9f9;
+}
+
+/* Fixed gradient layer — robust on mobile where background-attachment: fixed is flaky. */
+body::before {
+  content: "";
+  position: fixed;
+  inset: 0;
+  z-index: -1;
+  background: linear-gradient(180deg, #f9f9f9 45%, #0e3057 100%);
+}
+
+button {
+  font: inherit;
+}

@@ -1,10 +1,15 @@
+import "./globals.css";
+import { DM_Sans } from "next/font/google";
+
+const dmSans = DM_Sans({ subsets: ["latin"], weight: ["400", "500", "700"] });
+
 export const metadata = { title: "KIRA", manifest: "/manifest.webmanifest" };
-export const viewport = { themeColor: "#0b0b0f" };
+export const viewport = { themeColor: "#f9f9f9" };
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
     <html lang="en">
-      <body style={{ margin: 0, background: "#0b0b0f", color: "#eee" }}>
+      <body className={dmSans.className}>
         {children}
         <script
           dangerouslySetInnerHTML={{
