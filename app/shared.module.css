@@ -9,8 +9,10 @@
   color: var(--navy);
   margin: 25px 0 12px;
 }
+/* No display here: every consumer pairs .card with its own flex class
+   (.saveCard/.chatCard/.row), and equal-specificity cascade order in the
+   production bundle is not guaranteed. */
 .card {
-  display: block;
   width: 100%;
   text-align: left;
   background: var(--card);
