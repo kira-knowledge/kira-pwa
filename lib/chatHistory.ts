@@ -47,3 +47,13 @@ export function appendHistory(record: ChatRecord): ChatRecord[] {
   }
   return next;
 }
+
+// Pure: find a record by id in a given list.
+export function pickById(history: ChatRecord[], id: string): ChatRecord | null {
+  return history.find((r) => r.id === id) ?? null;
+}
+
+// Convenience: load from localStorage then pick.
+export function findById(id: string): ChatRecord | null {
+  return pickById(loadHistory(), id);
+}

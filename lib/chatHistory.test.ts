@@ -1,5 +1,5 @@
 import { describe, it, expect } from "vitest";
-import { capHistory, ChatRecord } from "./chatHistory";
+import { capHistory, pickById, ChatRecord } from "./chatHistory";
 
 function rec(id: string): ChatRecord {
   return { id, question: id, answer: "", citations: [], suggested: [], grounded_by: "dify", ts: 0 };
@@ -23,5 +23,14 @@ describe("capHistory", () => {
     const start = [rec("a")];
     capHistory(start, rec("b"));
     expect(start.map((r) => r.id)).toEqual(["a"]);
+  });
+});
+
+describe("pickById", () => {
+  it("returns the matching record", () => {
+    expect(pickById([rec("a"), rec("b")], "b")?.id).toBe("b");
+  });
+  it("returns null when not found", () => {
+    expect(pickById([rec("a")], "zzz")).toBeNull();
   });
 });
