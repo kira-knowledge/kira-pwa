@@ -12,7 +12,14 @@ export default function SourceCard({ citation }: { citation: Citation }) {
       rel="noreferrer"
     >
       {citation.thumbnail ? (
-        <img className={styles.sourceThumb} src={citation.thumbnail} alt="" />
+        <img
+          className={styles.sourceThumb}
+          src={citation.thumbnail}
+          alt=""
+          onError={(e) => {
+            (e.target as HTMLImageElement).style.display = "none";
+          }}
+        />
       ) : (
         <div className={styles.sourceThumbFallback} />
       )}
