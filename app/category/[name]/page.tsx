@@ -1,13 +1,15 @@
 "use client";
 import { useEffect, useState } from "react";
-import { useRouter } from "next/navigation";
+
+import styles from "./category.module.css";
+import shared from "../../shared.module.css";
+import TopBar from "../../../components/TopBar";
 import BottomNav from "../../../components/BottomNav";
+import CategoryPills from "../../../components/CategoryPills";
 import PostCard, { PostItem } from "../../../components/PostCard";
 import { filterByCategory } from "../../../lib/categoryFilter";
-import styles from "../../page.module.css";
 
 export default function CategoryViewer({ params }: { params: { name: string } }) {
-  const router = useRouter();
   const name = decodeURIComponent(params.name);
   const [items, setItems] = useState<PostItem[] | null>(null);
   const [stale, setStale] = useState(false);
@@ -35,25 +37,25 @@ export default function CategoryViewer({ params }: { params: { name: string } })
   }, [name]);
 
   return (
-    <main className={styles.wrap}>
-      <header className={styles.header}>
-        <button className={styles.refresh} onClick={() => router.push("/categories")}>
-          ← Categories
-        </button>
-        <h1 className={styles.brand}>{name}</h1>
-      </header>
-      {items === null && <p className={styles.muted}>Loading…</p>}
+    <main className={shared.wrap}>
+      <TopBar />
+      <h2 className={shared.sectionTitle}>{name}</h2>
+      {items === null && <p className={shared.muted}>Loading&hellip;</p>}
       {stale && (
-        <p className={styles.muted}>
+        <p className={styles.staleNote}>
           This category changed as new posts came in. Head back to Categories.
         </p>
       )}
-      <section className={styles.grid}>
+      <div className={shared.cardList}>
         {items?.map((it) => (
           <PostCard key={it.id} item={it} />
         ))}
-      </section>
-      <BottomNav />
+      </div>
+
+      <h2 className={shared.sectionTitle}>Explore other categories</h2>
+      <CategoryPills />
+
+      <BottomNav active="categories" />
     </main>
   );
 }
