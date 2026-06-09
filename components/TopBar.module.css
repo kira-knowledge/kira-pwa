@@ -16,6 +16,32 @@
   align-items: center;
   justify-content: center;
 }
+.account {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+.badge {
+  font-size: 11px;
+  letter-spacing: 0.08em;
+  font-weight: 700;
+  color: var(--muted);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-pill);
+  padding: 3px 10px;
+}
+.pro {
+  color: #fff;
+  background: var(--navy-deep);
+  border-color: var(--navy-deep);
+}
 .profile {
   line-height: 0;
+  background: none;
+  border: none;
+  padding: 0;
+  cursor: pointer;
+}
+.profile:disabled {
+  cursor: default;
 }
