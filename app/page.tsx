@@ -1,8 +1,9 @@
 "use client";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 
 import styles from "./page.module.css";
 import InstallPrompt from "./InstallPrompt";
+import ThemeBubbles, { Theme } from "./ThemeBubbles";
 
 type Item = {
   title: string;
@@ -16,14 +17,32 @@ type Item = {
 
 export default function Library() {
   const [items, setItems] = useState<Item[] | null>(null);
+  const [themes, setThemes] = useState<Theme[]>([]);
+  const [activeTheme, setActiveTheme] = useState<string | null>(null);
   const [err, setErr] = useState("");
+  const lastThemeCount = useRef<number>(-1);
+
+  async function loadThemes() {
+    try {
+      const r = await fetch("/api/themes", { cache: "no-store" });
+      const data = await r.json();
+      setThemes(Array.isArray(data?.themes) ? data.themes : []);
+    } catch {
+      setThemes([]);
+    }
+  }
 
   async function load() {
     try {
       const r = await fetch("/api/library", { cache: "no-store" });
       const data = await r.json();
-      setItems(Array.isArray(data) ? data : []);
+      const list: Item[] = Array.isArray(data) ? data : [];
+      setItems(list);
       setErr("");
+      if (list.length !== lastThemeCount.current) {
+        lastThemeCount.current = list.length;
+        await loadThemes();
+      }
     } catch (e: any) {
       setErr(e.message);
     }
@@ -35,16 +54,42 @@ export default function Library() {
     return () => clearInterval(t);
   }, []);
 
+  // Drop the active filter if its theme no longer exists after a refresh.
+  useEffect(() => {
+    if (activeTheme && !themes.some((t) => t.name === activeTheme)) {
+      setActiveTheme(null);
+    }
+  }, [themes, activeTheme]);
+
+  function refresh() {
+    lastThemeCount.current = -1; // force a theme re-fetch on manual refresh
+    load();
+  }
+
+  const activeUrls = activeTheme
+    ? themes.find((t) => t.name === activeTheme)?.source_urls ?? []
+    : null;
+  const visibleItems =
+    activeUrls && items
+      ? items.filter((it) => activeUrls.includes(it.source_url))
+      : items;
+
   return (
     <main className={styles.wrap}>
       <header className={styles.header}>
         <h1 className={styles.brand}>KIRA</h1>
-        <button className={styles.refresh} onClick={load}>
+        <button className={styles.refresh} onClick={refresh}>
           Refresh
         </button>
       </header>
 
       <InstallPrompt />
+
+      <ThemeBubbles
+        themes={themes}
+        activeTheme={activeTheme}
+        onSelect={setActiveTheme}
+      />
 
       {err && <p className={styles.error}>Couldn&rsquo;t reach KIRA: {err}</p>}
       {items === null && <p className={styles.muted}>Loading your library&hellip;</p>}
@@ -56,7 +101,7 @@ export default function Library() {
       )}
 
       <section className={styles.grid}>
-        {items?.map((it, i) => (
+        {visibleItems?.map((it, i) => (
           <article key={i} className={styles.card}>
             {it.thumbnail ? (
               <img
