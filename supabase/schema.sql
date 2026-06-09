@@ -29,6 +29,11 @@ begin
 end;
 $$;
 
+-- handle_new_user is a trigger-only function; it must NOT be callable via the REST
+-- API (Supabase security advisor 0028/0029). Triggers still run it regardless of
+-- these EXECUTE grants.
+revoke execute on function public.handle_new_user() from public, anon, authenticated;
+
 drop trigger if exists on_auth_user_created on auth.users;
 create trigger on_auth_user_created
   after insert on auth.users
