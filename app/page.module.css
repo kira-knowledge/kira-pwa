@@ -186,3 +186,24 @@
   padding: 1px 7px;
   color: inherit;
 }
+.askBar {
+  display: flex;
+  gap: 8px;
+  margin: 8px 0 12px;
+}
+.askInput {
+  flex: 1;
+  background: #16161c;
+  border: 1px solid #2a2a33;
+  color: #e8e8ee;
+  border-radius: 10px;
+  padding: 10px 12px;
+}
+.askSend {
+  background: #7c5cff;
+  border: none;
+  color: white;
+  border-radius: 10px;
+  padding: 10px 16px;
+  cursor: pointer;
+}

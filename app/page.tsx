@@ -1,5 +1,6 @@
 "use client";
 import { useEffect, useRef, useState } from "react";
+import { useRouter } from "next/navigation";
 
 import styles from "./page.module.css";
 import InstallPrompt from "./InstallPrompt";
@@ -16,10 +17,11 @@ type Item = {
 };
 
 export default function Library() {
+  const router = useRouter();
   const [items, setItems] = useState<Item[] | null>(null);
   const [themes, setThemes] = useState<Theme[]>([]);
-  const [activeTheme, setActiveTheme] = useState<string | null>(null);
   const [err, setErr] = useState("");
+  const [ask, setAsk] = useState("");
   const lastThemeCount = useRef<number>(-1);
 
   async function loadThemes() {
@@ -54,25 +56,17 @@ export default function Library() {
     return () => clearInterval(t);
   }, []);
 
-  // Drop the active filter if its theme no longer exists after a refresh.
-  useEffect(() => {
-    if (activeTheme && !themes.some((t) => t.name === activeTheme)) {
-      setActiveTheme(null);
-    }
-  }, [themes, activeTheme]);
-
   function refresh() {
-    lastThemeCount.current = -1; // force a theme re-fetch on manual refresh
+    lastThemeCount.current = -1;
     load();
   }
 
-  const activeUrls = activeTheme
-    ? themes.find((t) => t.name === activeTheme)?.source_urls ?? []
-    : null;
-  const visibleItems =
-    activeUrls && items
-      ? items.filter((it) => activeUrls.includes(it.source_url))
-      : items;
+  function submitAsk(e: React.FormEvent) {
+    e.preventDefault();
+    const q = ask.trim();
+    if (!q) return;
+    router.push(`/chat?q=${encodeURIComponent(q)}`);
+  }
 
   return (
     <main className={styles.wrap}>
@@ -85,11 +79,17 @@ export default function Library() {
 
       <InstallPrompt />
 
-      <ThemeBubbles
-        themes={themes}
-        activeTheme={activeTheme}
-        onSelect={setActiveTheme}
-      />
+      <form className={styles.askBar} onSubmit={submitAsk}>
+        <input
+          className={styles.askInput}
+          value={ask}
+          onChange={(e) => setAsk(e.target.value)}
+          placeholder="Ask your saves…"
+        />
+        <button className={styles.askSend} type="submit">Ask</button>
+      </form>
+
+      <ThemeBubbles themes={themes} />
 
       {err && <p className={styles.error}>Couldn&rsquo;t reach KIRA: {err}</p>}
       {items === null && <p className={styles.muted}>Loading your library&hellip;</p>}
@@ -101,7 +101,7 @@ export default function Library() {
       )}
 
       <section className={styles.grid}>
-        {visibleItems?.map((it) => (
+        {items?.map((it) => (
           <article key={it.source_url} className={styles.card}>
             {it.thumbnail ? (
               <img
