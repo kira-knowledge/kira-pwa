@@ -105,6 +105,10 @@ function ChatInner() {
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ question: current.question }),
       });
+      if (!r.ok) {
+        setDeepen("Exa coming soon.");
+        return;
+      }
       const data = await r.json();
       setDeepen(data?.message ?? "Exa coming soon.");
     } catch {
@@ -148,7 +152,12 @@ function ChatInner() {
             <p className={styles.muted}>KIRA is reading your saves…</p>
           )}
           {status === "error" && (
-            <p className={styles.error}>KIRA couldn&rsquo;t answer that — try again.</p>
+            <>
+              <p className={styles.error}>KIRA couldn&rsquo;t answer that — try again.</p>
+              <button type="button" className={styles.chip} onClick={() => ask(current.question)}>
+                Retry
+              </button>
+            </>
           )}
           {status === "answered" && (
             <>
@@ -163,8 +172,8 @@ function ChatInner() {
               )}
               {current.suggested.length > 0 && (
                 <div className={styles.chips}>
-                  {current.suggested.map((s) => (
-                    <button key={s} className={styles.chip} onClick={() => ask(s)}>
+                  {[...new Set(current.suggested)].map((s) => (
+                    <button key={s} type="button" className={styles.chip} onClick={() => ask(s)}>
                       {s}
                     </button>
                   ))}
