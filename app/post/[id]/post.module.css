@@ -2,7 +2,6 @@
   max-width: 680px;
   margin: 0 auto;
   padding: 20px 16px 96px;
-  font-family: system-ui, sans-serif;
 }
 .header {
   display: flex;
@@ -38,6 +37,7 @@
 }
 .textarea {
   width: 100%;
+  box-sizing: border-box;
   min-height: 96px;
   background: var(--card);
   border: 1px solid var(--border);
