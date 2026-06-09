@@ -1,6 +1,9 @@
 import { NextResponse } from "next/server";
+import { requireSession } from "../../../lib/apiAuth";
 
 export async function GET() {
+  const unauth = await requireSession();
+  if (unauth) return unauth;
   try {
     const r = await fetch(`${process.env.ORCHESTRATOR_URL}/items`, {
       headers: { "x-ingest-secret": process.env.INGEST_SECRET ?? "" },

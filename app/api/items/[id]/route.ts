@@ -1,9 +1,12 @@
 import { NextRequest, NextResponse } from "next/server";
+import { requireSession } from "../../../../lib/apiAuth";
 
 export async function PATCH(
   req: NextRequest,
   { params }: { params: { id: string } }
 ) {
+  const unauth = await requireSession();
+  if (unauth) return unauth;
   try {
     const body = await req.json();
     const r = await fetch(

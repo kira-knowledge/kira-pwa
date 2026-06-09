@@ -1,6 +1,9 @@
 import { NextRequest, NextResponse } from "next/server";
+import { requireSession } from "../../../lib/apiAuth";
 
 export async function POST(req: NextRequest) {
+  const unauth = await requireSession();
+  if (unauth) return unauth;
   const { url } = await req.json();
   if (!url) {
     return NextResponse.json({ ok: false, error: "missing url" }, { status: 400 });
