@@ -5,6 +5,9 @@ import { useRouter, useSearchParams } from "next/navigation";
 import styles from "./chat.module.css";
 import AnswerWithCitations from "../../components/AnswerWithCitations";
 import SourceCard from "../../components/SourceCard";
+import WebResultCard from "../../components/WebResultCard";
+import { parseDeepenResponse, WebResult } from "../../lib/deepen";
+import { splitCitations } from "../../lib/citations";
 import { ChatRecord, Citation, appendHistory, findById, loadHistory } from "../../lib/chatHistory";
 
 type ChatResponse = {
@@ -12,6 +15,12 @@ type ChatResponse = {
   citations: Citation[];
   suggested: string[];
   grounded_by: string;
+};
+
+type DeepenState = {
+  status: "idle" | "loading" | "done" | "error";
+  synthesis: string;
+  results: WebResult[];
 };
 
 const themeQuestion = (name: string) =>
@@ -30,7 +39,8 @@ function ChatInner() {
   const [history, setHistory] = useState<ChatRecord[]>([]);
   const [input, setInput] = useState("");
   const [title, setTitle] = useState("Ask KIRA");
-  const [deepen, setDeepen] = useState("");
+  const [deepen, setDeepen] = useState<DeepenState>({ status: "idle", synthesis: "", results: [] });
+  const [scopeUrls, setScopeUrls] = useState<string[] | undefined>(undefined);
   const started = useRef(false);
 
   useEffect(() => {
@@ -39,7 +49,7 @@ function ChatInner() {
 
   async function ask(question: string, themeSourceUrls?: string[], theme?: string) {
     setStatus("loading");
-    setDeepen("");
+    setDeepen({ status: "idle", synthesis: "", results: [] });
     setCurrent({
       id: makeId(), question, answer: "", citations: [], suggested: [],
       grounded_by: "", ts: Date.now(), theme,
@@ -95,7 +105,9 @@ function ChatInner() {
           urls = undefined;
         }
         // Stale theme (not found) → free-text question, no scope.
-        ask(themeQuestion(theme), urls && urls.length ? urls : undefined, theme);
+        const scoped = urls && urls.length ? urls : undefined;
+        setScopeUrls(scoped);
+        ask(themeQuestion(theme), scoped, theme);
       })();
     } else if (q) {
       ask(q);
@@ -108,26 +120,24 @@ function ChatInner() {
     const q = input.trim();
     if (!q) return;
     setInput("");
+    setScopeUrls(undefined);
     ask(q);
   }
 
   async function goDeeper() {
     if (!current) return;
-    setDeepen("Searching…");
+    setDeepen({ status: "loading", synthesis: "", results: [] });
     try {
       const r = await fetch("/api/deepen", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ question: current.question }),
+        body: JSON.stringify({ question: current.question, theme_source_urls: scopeUrls }),
       });
-      if (!r.ok) {
-        setDeepen("Exa coming soon.");
-        return;
-      }
-      const data = await r.json();
-      setDeepen(data?.message ?? "Exa coming soon.");
+      if (!r.ok) throw new Error(`HTTP ${r.status}`);
+      const data = parseDeepenResponse(await r.json());
+      setDeepen({ status: "done", synthesis: data.synthesis, results: data.results });
     } catch {
-      setDeepen("Exa coming soon.");
+      setDeepen({ status: "error", synthesis: "", results: [] });
     }
   }
 
@@ -188,16 +198,56 @@ function ChatInner() {
               {current.suggested.length > 0 && (
                 <div className={styles.chips}>
                   {[...new Set(current.suggested)].map((s) => (
-                    <button key={s} type="button" className={styles.chip} onClick={() => ask(s)}>
+                    <button key={s} type="button" className={styles.chip} onClick={() => { setScopeUrls(undefined); ask(s); }}>
                       {s}
                     </button>
                   ))}
                 </div>
               )}
-              <button className={styles.deepen} onClick={goDeeper}>
+              <button
+                className={styles.deepen}
+                onClick={goDeeper}
+                disabled={deepen.status === "loading"}
+              >
                 Go deeper (Exa)
               </button>
-              {deepen && <p className={styles.muted}>{deepen}</p>}
+              {deepen.status === "loading" && (
+                <p className={styles.muted}>Searching the web…</p>
+              )}
+              {deepen.status === "error" && (
+                <p className={styles.muted}>Couldn&rsquo;t reach the web right now.</p>
+              )}
+              {deepen.status === "done" && (
+                <div className={styles.web}>
+                  <div className={styles.recentLabel}>FROM THE WEB</div>
+                  {deepen.results.length === 0 ? (
+                    <p className={styles.muted}>No web results found.</p>
+                  ) : (
+                    <>
+                      {deepen.synthesis && (
+                        <p className={styles.answer}>
+                          {splitCitations(deepen.synthesis, deepen.results).map((seg, i) =>
+                            seg.citation ? (
+                              <a
+                                key={i}
+                                href={`#web-source-${seg.citation.n}`}
+                                className={styles.citeMark}
+                              >
+                                {seg.text}
+                              </a>
+                            ) : (
+                              <span key={i}>{seg.text}</span>
+                            )
+                          )}
+                        </p>
+                      )}
+                      {deepen.results.map((r) => (
+                        <WebResultCard key={r.n} result={r} />
+                      ))}
+                    </>
+                  )}
+                </div>
+              )}
             </>
           )}
         </section>
