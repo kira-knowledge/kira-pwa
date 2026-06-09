@@ -2,11 +2,14 @@
 import { useEffect, useRef, useState } from "react";
 import { useRouter } from "next/navigation";
 
-import styles from "./page.module.css";
+import styles from "./home.module.css";
+import shared from "./shared.module.css";
 import InstallPrompt from "./InstallPrompt";
-import ThemeBubbles, { Theme } from "./ThemeBubbles";
-import PostCard from "../components/PostCard";
+import TopBar from "../components/TopBar";
+import SearchBox from "../components/SearchBox";
+import CategoryPills, { PillTheme } from "../components/CategoryPills";
 import BottomNav from "../components/BottomNav";
+import { savedLabel } from "../lib/savedLabel";
 
 type Item = {
   id: string;
@@ -19,12 +22,13 @@ type Item = {
   created_at: string;
 };
 
+const SUGGESTED_PROMPT = "Build me a 3-day Tokyo itinerary from my saved reels";
+
 export default function Library() {
   const router = useRouter();
   const [items, setItems] = useState<Item[] | null>(null);
-  const [themes, setThemes] = useState<Theme[]>([]);
+  const [themes, setThemes] = useState<PillTheme[]>([]);
   const [err, setErr] = useState("");
-  const [ask, setAsk] = useState("");
   const lastThemeCount = useRef<number>(-1);
 
   async function loadThemes() {
@@ -59,55 +63,50 @@ export default function Library() {
     return () => clearInterval(t);
   }, []);
 
-  function refresh() {
-    lastThemeCount.current = -1;
-    load();
-  }
-
-  function submitAsk(e: React.FormEvent) {
-    e.preventDefault();
-    const q = ask.trim();
-    if (!q) return;
-    router.push(`/chat?q=${encodeURIComponent(q)}`);
-  }
-
   return (
-    <main className={styles.wrap}>
-      <header className={styles.header}>
-        <h1 className={styles.brand}>KIRA</h1>
-        <button className={styles.refresh} onClick={refresh}>
-          Refresh
-        </button>
-      </header>
+    <main className={shared.wrap}>
+      <TopBar />
+      <p className={styles.greeting}>Hi there!</p>
+      <SearchBox placeholder="What are we looking for today?" />
+      <button
+        className={styles.suggested}
+        onClick={() => router.push(`/chat?q=${encodeURIComponent(SUGGESTED_PROMPT)}`)}
+      >
+        <span className={styles.suggestedLabel}>Suggested prompt</span>
+        <span className={styles.suggestedText}>{SUGGESTED_PROMPT}</span>
+      </button>
 
       <InstallPrompt />
 
-      <form className={styles.askBar} onSubmit={submitAsk}>
-        <input
-          className={styles.askInput}
-          value={ask}
-          onChange={(e) => setAsk(e.target.value)}
-          placeholder="Ask your saves…"
-        />
-        <button className={styles.askSend} type="submit">Ask</button>
-      </form>
+      <h2 className={shared.sectionTitle}>Categories</h2>
+      {themes.length === 0 ? (
+        <p className={shared.muted}>Save a few more reels and KIRA will group them into categories.</p>
+      ) : (
+        <CategoryPills themes={themes} />
+      )}
 
-      <ThemeBubbles themes={themes} />
-
-      {err && <p className={styles.error}>Couldn&rsquo;t reach KIRA: {err}</p>}
-      {items === null && <p className={styles.muted}>Loading your library&hellip;</p>}
+      <h2 className={shared.sectionTitle}>Recent saves</h2>
+      {err && <p className={shared.error}>Couldn&rsquo;t reach KIRA: {err}</p>}
+      {items === null && <p className={shared.muted}>Loading your library&hellip;</p>}
       {items?.length === 0 && (
         <div className={styles.empty}>
           <p>Your library is empty.</p>
-          <p className={styles.muted}>Share an Instagram reel to KIRA to see it here.</p>
+          <p className={shared.muted}>Share an Instagram reel to KIRA to see it here.</p>
         </div>
       )}
-
-      <section className={styles.grid}>
-        {items?.map((it) => (
-          <PostCard key={it.id} item={it} />
+      <div className={shared.cardList}>
+        {items?.slice(0, 3).map((it) => (
+          <button
+            key={it.id}
+            className={`${shared.card} ${styles.saveCard}`}
+            onClick={() => router.push(`/post/${encodeURIComponent(it.id)}`)}
+          >
+            <span className={styles.saveTitle}>{it.title}</span>
+            <span className={styles.saveMeta}>Instagram &bull; {it.author}</span>
+            <span className={styles.saveDate}>{savedLabel(it.created_at)}</span>
+          </button>
         ))}
-      </section>
+      </div>
 
       <BottomNav active="home" />
     </main>
