@@ -1,0 +1,21 @@
+.bar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 21px;
+}
+.logo {
+  width: 38px;
+  height: 37px;
+  border-radius: 10px;
+  background: var(--navy-deep);
+  color: #fff;
+  font-size: 21px;
+  font-weight: 500;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.profile {
+  line-height: 0;
+}

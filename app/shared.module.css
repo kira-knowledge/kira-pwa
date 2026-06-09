@@ -1,0 +1,33 @@
+.wrap {
+  max-width: 480px;
+  margin: 0 auto;
+  padding: 22px 22px 130px;
+}
+.sectionTitle {
+  font-size: 22px;
+  font-weight: 500;
+  color: var(--navy);
+  margin: 25px 0 12px;
+}
+.card {
+  display: block;
+  width: 100%;
+  text-align: left;
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-card);
+  padding: 12px 15px;
+  color: var(--ink);
+  cursor: pointer;
+}
+.cardList {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+.muted {
+  color: var(--muted);
+}
+.error {
+  color: #c0392b;
+}
