@@ -1,0 +1,34 @@
+.bar {
+  position: fixed;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
+  background: #101015;
+  border-top: 1px solid #22222b;
+  padding: 8px 0 calc(8px + env(safe-area-inset-bottom));
+  z-index: 50;
+}
+.item {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 2px;
+  background: none;
+  border: none;
+  color: #8a8a96;
+  cursor: pointer;
+}
+.active {
+  color: #c9b8ff;
+}
+.icon {
+  font-size: 18px;
+  line-height: 1;
+}
+.label {
+  font-size: 11px;
+}
