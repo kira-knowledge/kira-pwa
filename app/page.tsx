@@ -101,8 +101,8 @@ export default function Library() {
       )}
 
       <section className={styles.grid}>
-        {visibleItems?.map((it, i) => (
-          <article key={i} className={styles.card}>
+        {visibleItems?.map((it) => (
+          <article key={it.source_url} className={styles.card}>
             {it.thumbnail ? (
               <img
                 className={styles.thumb}
