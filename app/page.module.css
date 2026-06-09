@@ -103,3 +103,50 @@
 .error {
   color: #ff9b9b;
 }
+
+.installCard {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  background: linear-gradient(135deg, #1c1630, #161a2a);
+  border: 1px solid #2e2a44;
+  border-radius: 16px;
+  padding: 14px 16px;
+  margin-bottom: 22px;
+}
+.installEmoji {
+  font-size: 26px;
+  line-height: 1;
+}
+.installText {
+  flex: 1;
+  min-width: 0;
+}
+.installText strong {
+  color: #fff;
+  font-size: 15px;
+}
+.installHint {
+  margin: 4px 0 0;
+  font-size: 12.5px;
+  color: #9a9aa8;
+  line-height: 1.4;
+}
+.installHint b {
+  color: #c9b8ff;
+  font-weight: 600;
+}
+.installBtn {
+  background: #7c5cff;
+  color: #fff;
+  border: none;
+  border-radius: 999px;
+  padding: 10px 22px;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  white-space: nowrap;
+}
+.installBtn:hover {
+  background: #8f72ff;
+}

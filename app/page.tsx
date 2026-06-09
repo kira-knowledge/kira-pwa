@@ -2,6 +2,7 @@
 import { useEffect, useState } from "react";
 
 import styles from "./page.module.css";
+import InstallPrompt from "./InstallPrompt";
 
 type Item = {
   title: string;
@@ -42,6 +43,8 @@ export default function Library() {
           Refresh
         </button>
       </header>
+
+      <InstallPrompt />
 
       {err && <p className={styles.error}>Couldn&rsquo;t reach KIRA: {err}</p>}
       {items === null && <p className={styles.muted}>Loading your library&hellip;</p>}
