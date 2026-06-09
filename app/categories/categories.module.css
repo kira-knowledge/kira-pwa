@@ -1,0 +1,25 @@
+.row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+}
+.rowText {
+  min-width: 0;
+}
+.rowName {
+  font-size: 15px;
+  font-weight: 500;
+  line-height: 21px;
+}
+.rowWhy {
+  font-size: 12px;
+  color: var(--muted);
+  margin-top: 2px;
+}
+.rowCount {
+  font-size: 12px;
+  font-weight: 500;
+  color: var(--navy);
+  flex: none;
+}

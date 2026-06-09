@@ -1,8 +1,11 @@
 "use client";
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
+
+import styles from "./categories.module.css";
+import shared from "../shared.module.css";
+import TopBar from "../../components/TopBar";
 import BottomNav from "../../components/BottomNav";
-import styles from "../page.module.css";
 
 type Theme = { name: string; why: string; count: number };
 
@@ -22,30 +25,29 @@ export default function CategoriesPage() {
   }, []);
 
   return (
-    <main className={styles.wrap}>
-      <header className={styles.header}>
-        <h1 className={styles.brand}>Categories</h1>
-      </header>
-      {themes === null && <p className={styles.muted}>Loading…</p>}
+    <main className={shared.wrap}>
+      <TopBar />
+      <h2 className={shared.sectionTitle}>Categories</h2>
+      {themes === null && <p className={shared.muted}>Loading&hellip;</p>}
       {themes && themes.length === 0 && (
-        <p className={styles.muted}>
+        <p className={shared.muted}>
           {ready
             ? "No categories yet."
             : "Save a few more reels and KIRA will group them into categories."}
         </p>
       )}
-      <div className={styles.catList}>
+      <div className={shared.cardList}>
         {themes?.map((t) => (
           <button
             key={t.name}
-            className={styles.catItem}
+            className={`${shared.card} ${styles.row}`}
             onClick={() => router.push(`/category/${encodeURIComponent(t.name)}`)}
           >
-            <div>
-              <div className={styles.catName}>{t.name}</div>
-              <div className={styles.catWhy}>{t.why}</div>
+            <div className={styles.rowText}>
+              <div className={styles.rowName}>{t.name}</div>
+              <div className={styles.rowWhy}>{t.why}</div>
             </div>
-            <span className={styles.bubbleCount}>{t.count}</span>
+            <span className={styles.rowCount}>{t.count}</span>
           </button>
         ))}
       </div>
