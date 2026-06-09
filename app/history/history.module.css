@@ -1,0 +1,26 @@
+.chatCard {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+.chatQuestion {
+  font-size: 15px;
+  font-weight: 500;
+  line-height: 21px;
+}
+.chatTheme {
+  font-size: 12px;
+  color: var(--muted);
+}
+.chatDate {
+  font-size: 11px;
+  font-weight: 500;
+  color: var(--accent);
+  margin-top: 4px;
+}
+.finePrint {
+  font-size: 11px;
+  color: var(--muted);
+  text-align: right;
+  margin: 8px 0 25px;
+}

@@ -1,9 +1,15 @@
 "use client";
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
+
+import styles from "./history.module.css";
+import shared from "../shared.module.css";
+import TopBar from "../../components/TopBar";
+import SearchBox from "../../components/SearchBox";
+import CategoryPills from "../../components/CategoryPills";
 import BottomNav from "../../components/BottomNav";
 import { ChatRecord, loadHistory } from "../../lib/chatHistory";
-import styles from "../page.module.css";
+import { savedLabel } from "../../lib/savedLabel";
 
 export default function HistoryPage() {
   const router = useRouter();
@@ -14,25 +20,32 @@ export default function HistoryPage() {
   }, []);
 
   return (
-    <main className={styles.wrap}>
-      <header className={styles.header}>
-        <h1 className={styles.brand}>History</h1>
-      </header>
-      {history.length === 0 && <p className={styles.muted}>No conversations yet.</p>}
-      <div className={styles.catList}>
+    <main className={shared.wrap}>
+      <TopBar />
+      <h2 className={shared.sectionTitle}>Your recent searches</h2>
+      {history.length === 0 && <p className={shared.muted}>No conversations yet.</p>}
+      <div className={shared.cardList}>
         {history.map((h) => (
           <button
             key={h.id}
-            className={styles.catItem}
+            className={`${shared.card} ${styles.chatCard}`}
             onClick={() => router.push(`/chat?history=${encodeURIComponent(h.id)}`)}
           >
-            <div>
-              <div className={styles.catName}>🕑 {h.question}</div>
-              {h.theme && <div className={styles.catWhy}>{h.theme}</div>}
-            </div>
+            <span className={styles.chatQuestion}>{h.question}</span>
+            {h.theme && <span className={styles.chatTheme}>{h.theme}</span>}
+            <span className={styles.chatDate}>{savedLabel(h.ts)}</span>
           </button>
         ))}
       </div>
+      {history.length > 0 && (
+        <p className={styles.finePrint}>Only the 10 most recent searches are saved.</p>
+      )}
+
+      <SearchBox placeholder="Looking for something new?" variant="navy" />
+
+      <h2 className={shared.sectionTitle}>Explore other categories</h2>
+      <CategoryPills />
+
       <BottomNav active="history" />
     </main>
   );
