@@ -43,7 +43,7 @@ export default function HistoryPage() {
 
       <SearchBox placeholder="Looking for something new?" variant="navy" />
 
-      <h2 className={shared.sectionTitle}>Explore other categories</h2>
+      <h2 className={shared.sectionTitle}>Explore other Knowledge</h2>
       <CategoryPills />
 
       <BottomNav active="history" />

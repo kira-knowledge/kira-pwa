@@ -2,6 +2,7 @@
 import { useEffect, useState } from "react";
 
 import styles from "./InstallPrompt.module.css";
+import { KiraMark } from "../components/icons/Icons";
 
 type BeforeInstallPromptEvent = Event & {
   prompt: () => Promise<void>;
@@ -46,14 +47,14 @@ export default function InstallPrompt() {
   // Already running as the installed app → show how to use it.
   if (standalone) {
     return (
-      <div className={styles.installCard}>
-        <span className={styles.installEmoji}>✅</span>
-        <div className={styles.installText}>
-          <strong>KIRA is ready</strong>
-          <p className={styles.installHint}>
-            In Instagram, tap <b>Share → KIRA</b> on any reel to save it here.
-          </p>
-        </div>
+      <div className={styles.installStatic}>
+        <KiraMark size={40} />
+        <span className={styles.installCol}>
+          <span className={styles.installTitle}>KIRA is ready</span>
+          <span className={styles.installSub}>
+            In Instagram, tap <strong>Share → KIRA</strong> on any reel to save it here.
+          </span>
+        </span>
       </div>
     );
   }
@@ -61,39 +62,28 @@ export default function InstallPrompt() {
   // Just installed (still in the browser tab).
   if (installed) {
     return (
-      <div className={styles.installCard}>
-        <span className={styles.installEmoji}>🎉</span>
-        <div className={styles.installText}>
-          <strong>Added to your home screen!</strong>
-          <p className={styles.installHint}>
-            Open KIRA from your home screen, then in Instagram tap <b>Share → KIRA</b>.
-          </p>
-        </div>
+      <div className={styles.installStatic}>
+        <KiraMark size={40} />
+        <span className={styles.installCol}>
+          <span className={styles.installTitle}>Added to your home screen!</span>
+          <span className={styles.installSub}>
+            Open KIRA from your home screen, then in Instagram tap <strong>Share → KIRA</strong>.
+          </span>
+        </span>
       </div>
     );
   }
 
-  // Default card: one-tap install when the browser allows it, manual steps otherwise.
+  // Install-available branch: prompt the user to install.
   return (
-    <div className={styles.installCard}>
-      <span className={styles.installEmoji}>📲</span>
-      <div className={styles.installText}>
-        <strong>Add KIRA to your phone</strong>
-        <p className={styles.installHint}>
-          {deferred ? (
-            <>One tap, then share Instagram reels straight to KIRA.</>
-          ) : (
-            <>
-              In Chrome: <b>⋮ → Add to Home screen</b>, then share reels via <b>Share → KIRA</b>.
-            </>
-          )}
-        </p>
-      </div>
-      {deferred && (
-        <button className={styles.installBtn} onClick={handleInstall}>
-          Install
-        </button>
-      )}
-    </div>
+    <button className={styles.installCard} onClick={handleInstall}>
+      <KiraMark size={40} />
+      <span className={styles.installCol}>
+        <span className={styles.installTitle}>Add KIRA to your phone!</span>
+        <span className={styles.installSub}>
+          In your browser → Select <strong>Add to Home Screen</strong> to enable direct sharing via your Instagram App.
+        </span>
+      </span>
+    </button>
   );
 }
