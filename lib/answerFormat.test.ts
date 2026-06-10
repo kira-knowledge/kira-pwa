@@ -33,4 +33,26 @@ describe("parseAnswerBlocks", () => {
   it("returns an empty array for empty input", () => {
     expect(parseAnswerBlocks("")).toEqual([]);
   });
+  it("parses markdown headings into heading blocks", () => {
+    expect(parseAnswerBlocks("### Key takeaways\nSome detail.")).toEqual([
+      { type: "heading", text: "Key takeaways" },
+      { type: "para", text: "Some detail." },
+    ]);
+  });
+  it("treats any heading level the same", () => {
+    expect(parseAnswerBlocks("## Overview")).toEqual([
+      { type: "heading", text: "Overview" },
+    ]);
+  });
+  it("keeps inline markdown inside heading text", () => {
+    expect(parseAnswerBlocks("### Heading with **bold** word")).toEqual([
+      { type: "heading", text: "Heading with **bold** word" },
+    ]);
+  });
+  it("strips bold-only wrapper from heading-style lines", () => {
+    expect(parseAnswerBlocks("**Next steps:**\n1. do it")).toEqual([
+      { type: "heading", text: "Next steps:" },
+      { type: "list", ordered: true, items: ["do it"] },
+    ]);
+  });
 });

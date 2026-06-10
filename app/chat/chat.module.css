@@ -97,6 +97,24 @@
   margin-bottom: 0;
 }
 
+.answerHeading {
+  margin: 0 0 6px;
+  font-size: 15px;
+  font-weight: 700;
+  line-height: 1.4;
+}
+.answerHeading:not(:first-child) {
+  margin-top: 12px;
+}
+
+.answerCode {
+  font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+  font-size: 0.9em;
+  background: var(--border);
+  border-radius: 4px;
+  padding: 1px 4px;
+}
+
 .answerList {
   margin: 0 0 8px;
   padding-left: 20px;

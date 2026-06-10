@@ -1,6 +1,7 @@
 "use client";
 import { splitCitations } from "../lib/citations";
 import { parseAnswerBlocks } from "../lib/answerFormat";
+import { parseInline } from "../lib/inlineMarkdown";
 import styles from "../app/chat/chat.module.css";
 
 export default function AnswerWithCitations<T extends { n: number }>({
@@ -14,7 +15,7 @@ export default function AnswerWithCitations<T extends { n: number }>({
 }) {
   const blocks = parseAnswerBlocks(answer);
 
-  const renderText = (text: string, key: string) =>
+  const renderSegments = (text: string, key: string) =>
     splitCitations(text, citations).map((seg, i) =>
       seg.citation ? (
         <a
@@ -29,9 +30,32 @@ export default function AnswerWithCitations<T extends { n: number }>({
       )
     );
 
+  // Inline markdown first, then citations inside each span, so bold text
+  // containing a [n] marker still gets a working citation link.
+  const renderText = (text: string, key: string) =>
+    parseInline(text).map((span, si) => {
+      const inner = renderSegments(span.text, `${key}-s${si}`);
+      if (span.bold) return <strong key={`${key}-s${si}`}>{inner}</strong>;
+      if (span.italic) return <em key={`${key}-s${si}`}>{inner}</em>;
+      if (span.code)
+        return (
+          <code key={`${key}-s${si}`} className={styles.answerCode}>
+            {inner}
+          </code>
+        );
+      return <span key={`${key}-s${si}`}>{inner}</span>;
+    });
+
   return (
     <div className={styles.answer}>
       {blocks.map((b, bi) => {
+        if (b.type === "heading") {
+          return (
+            <h3 key={bi} className={styles.answerHeading}>
+              {renderText(b.text, `h${bi}`)}
+            </h3>
+          );
+        }
         if (b.type === "para") {
           return (
             <p key={bi} className={styles.answerPara}>
