@@ -17,12 +17,18 @@
   --plan-card-text: #e6f6f5;
 }
 
+html {
+  background: #f9f9f9;
+}
+
 html,
 body {
   margin: 0;
   min-height: 100vh;
   color: var(--ink);
-  background: #f9f9f9;
+  /* NOTE: body must stay transparent — an opaque body background paints OVER
+     the fixed body::before gradient layer below (negative z-index pseudo
+     elements render beneath in-flow backgrounds). Flat fallback lives on html. */
 }
 
 /* Fixed gradient layer — robust on mobile where background-attachment: fixed is flaky. */
