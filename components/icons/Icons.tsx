@@ -44,7 +44,7 @@ export function ProfileIcon({ size = 38 }: IconProps) {
 export function KiraMark({ size = 38, plain = false }: KiraMarkProps) {
   const glyphFill = plain ? "#052d47" : "#f9f9f9";
   return (
-    <svg width={size} height={size * (37 / 38)} viewBox="0 0 38 37" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <svg width={size} height={size * (37 / 38)} viewBox="0 0 38 37" fill="none" aria-hidden="true" xmlns="http://www.w3.org/2000/svg">
       {!plain && <rect width="38" height="37" rx="10" fill="#052d47" />}
       <path d={KIRA_PATH_LEFT} fill={glyphFill} />
       <path d={KIRA_PATH_RIGHT} fill={glyphFill} />
