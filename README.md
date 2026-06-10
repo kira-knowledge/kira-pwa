@@ -51,7 +51,7 @@ Instagram share sheet ──► KIRA PWA (Next.js, Vercel)
 | **Auth & plans** | **Supabase** — accounts, Free/Pro gating (server-side, RLS) |
 | **Payments** | **Stripe** — $2/mo Pro plan: checkout, customer portal, webhook-driven downgrade on cancel |
 
-**Sibling repo:** [kira-orchestrator](https://github.com/alcunii/kira-orchestrator) — the FastAPI ingestion/chat brain.
+**Sibling repo:** [kira-orchestrator](https://github.com/kira-knowledge/kira-orchestrator) — the FastAPI ingestion/chat brain.
 
 ## Repo map
 
