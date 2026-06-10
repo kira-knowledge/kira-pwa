@@ -16,6 +16,13 @@ if (!url || !serviceKey || !stripeKey) {
   process.exit(1);
 }
 
+if (!stripeKey.startsWith("sk_test_")) {
+  console.error(
+    "STOP: STRIPE_SECRET_KEY does not look like a test key. Refusing to run."
+  );
+  process.exit(1);
+}
+
 const DEMO_EMAIL = "free@kira.demo";
 const admin = createClient(url, serviceKey, {
   auth: { autoRefreshToken: false, persistSession: false },
