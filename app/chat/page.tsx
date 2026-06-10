@@ -8,6 +8,8 @@ import SourceCard from "../../components/SourceCard";
 import WebResultCard from "../../components/WebResultCard";
 import { parseDeepenResponse, WebResult } from "../../lib/deepen";
 import { ChatRecord, Citation, appendHistory, findById, loadHistory } from "../../lib/chatHistory";
+import { usePlan } from "../../lib/usePlan";
+import { goDeeperButton } from "../../lib/goDeeper";
 
 type ChatResponse = {
   answer: string;
@@ -41,6 +43,8 @@ function ChatInner() {
   const [deepen, setDeepen] = useState<DeepenState>({ status: "idle", synthesis: "", results: [] });
   const [scopeUrls, setScopeUrls] = useState<string[] | undefined>(undefined);
   const started = useRef(false);
+  const { plan } = usePlan();
+  const deeperBtn = goDeeperButton(plan);
 
   useEffect(() => {
     setHistory(loadHistory());
@@ -143,11 +147,10 @@ function ChatInner() {
   return (
     <main className={styles.wrap}>
       <header className={styles.header}>
-        <button className={styles.back} onClick={() => router.push("/")}>←</button>
-        <h1 className={styles.title}>{title}</h1>
-        <button className={styles.history} onClick={() => router.push("/history")}>
-          History
-        </button>
+        <button className={styles.back} onClick={() => router.push("/")} aria-label="Back">‹</button>
+        <h1 className={styles.title}>{title === "Ask KIRA" ? "Think KIRA" : title}</h1>
+        <span className={styles.tagline}>Your knowledge, on demand.</span>
+        <button className={styles.history} onClick={() => router.push("/history")}>History</button>
       </header>
 
       {status === "idle" && (
@@ -188,10 +191,12 @@ function ChatInner() {
           )}
           {status === "answered" && (
             <>
-              <AnswerWithCitations answer={current.answer} citations={current.citations} />
+              <div className={styles.answerCard}>
+                <AnswerWithCitations answer={current.answer} citations={current.citations} />
+              </div>
               {current.citations.length > 0 && (
                 <div className={styles.sources}>
-                  <div className={styles.recentLabel}>SOURCES</div>
+                  <div className={styles.sourcesLabel}>Sources</div>
                   {current.citations.map((c) => (
                     <SourceCard key={c.n} citation={c} />
                   ))}
@@ -208,10 +213,10 @@ function ChatInner() {
               )}
               <button
                 className={styles.deepen}
-                onClick={goDeeper}
+                onClick={deeperBtn.action === "deepen" ? goDeeper : () => router.push("/upgrade")}
                 disabled={deepen.status === "loading"}
               >
-                Go deeper (Exa)
+                {deeperBtn.label}
               </button>
               {deepen.status === "loading" && (
                 <p className={styles.muted}>Searching the web…</p>
