@@ -150,3 +150,17 @@
   outline: 2px solid #fff;
   outline-offset: 2px;
 }
+
+.error {
+  text-align: center;
+  font-size: 13px;
+  color: #d4332b;
+  margin: 8px 0 0;
+}
+
+.cancelNote {
+  text-align: center;
+  font-size: 14px;
+  color: #3a4654;
+  margin: 12px 0 0;
+}
