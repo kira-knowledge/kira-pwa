@@ -74,9 +74,8 @@ export default function InstallPrompt() {
     );
   }
 
-  // Install-available branch: prompt the user to install.
-  return (
-    <button className={styles.installCard} onClick={handleInstall}>
+  const installContent = (
+    <>
       <KiraMark size={40} />
       <span className={styles.installCol}>
         <span className={styles.installTitle}>Add KIRA to your phone!</span>
@@ -84,6 +83,19 @@ export default function InstallPrompt() {
           In your browser → Select <strong>Add to Home Screen</strong> to enable direct sharing via your Instagram App.
         </span>
       </span>
+    </>
+  );
+
+  // No captured prompt (iOS Safari etc.): the copy is manual install guidance,
+  // so show it as a non-clickable card instead of a dead button.
+  if (!deferred) {
+    return <div className={styles.installStatic}>{installContent}</div>;
+  }
+
+  // Install-available branch: tapping triggers the native install prompt.
+  return (
+    <button className={styles.installCard} onClick={handleInstall}>
+      {installContent}
     </button>
   );
 }

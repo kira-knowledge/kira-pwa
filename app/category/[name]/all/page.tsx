@@ -63,7 +63,7 @@ export default function CategoryAll({ params }: { params: { name: string } }) {
       {items === null && <p className={shared.muted}>Loading&hellip;</p>}
       {stale && (
         <p className={shared.muted}>
-          This category changed as new posts came in. Head back to Categories.
+          This category changed as new posts came in. Head back to Knowledge.
         </p>
       )}
       {items?.length === 0 && !stale && (

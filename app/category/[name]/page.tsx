@@ -60,7 +60,7 @@ export default function CategoryViewer({ params }: { params: { name: string } })
       {items === null && <p className={shared.muted}>Loading&hellip;</p>}
       {stale && (
         <p className={styles.staleNote}>
-          This category changed as new posts came in. Head back to Categories.
+          This category changed as new posts came in. Head back to Knowledge.
         </p>
       )}
       <div className={shared.cardList}>
