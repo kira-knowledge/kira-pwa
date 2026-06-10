@@ -1,0 +1,58 @@
+.splash {
+  position: fixed;
+  inset: 0;
+  z-index: 1000;
+  background: linear-gradient(180deg, #f9f9f9 0%, #e8eef4 30%, #4a7fa5 65%, #0e3057 100%);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  opacity: 1;
+  transition: opacity 0.5s ease;
+}
+
+.leaving {
+  opacity: 0;
+  pointer-events: none;
+}
+
+.content {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  /* title↔mark gap generous; mark↔tagline tighter to match Figma */
+  gap: 0;
+  animation: rise 0.9s ease-out both;
+  /* Shift content slightly above viewport center to match Figma proportions */
+  margin-top: -60px;
+}
+
+.title {
+  color: var(--navy);
+  font-size: 24px;
+  font-weight: 700;
+  margin: 0 0 48px;
+  letter-spacing: -0.2px;
+}
+
+.mark {
+  /* no extra styles needed; KiraMark renders inline */
+}
+
+.tagline {
+  color: var(--coral);
+  font-size: 18px;
+  font-weight: 500;
+  margin: 40px 0 0;
+}
+
+@keyframes rise {
+  from {
+    transform: translateY(40vh);
+    opacity: 0;
+  }
+  to {
+    transform: translateY(0);
+    opacity: 1;
+  }
+}
