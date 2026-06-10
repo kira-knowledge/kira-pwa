@@ -194,14 +194,6 @@ function ChatInner() {
               <div className={styles.answerCard}>
                 <AnswerWithCitations answer={current.answer} citations={current.citations} />
               </div>
-              {current.citations.length > 0 && (
-                <div className={styles.sources}>
-                  <div className={styles.sourcesLabel}>Sources</div>
-                  {current.citations.map((c) => (
-                    <SourceCard key={c.n} citation={c} />
-                  ))}
-                </div>
-              )}
               {current.suggested.length > 0 && (
                 <div className={styles.chips}>
                   {[...new Set(current.suggested)].map((s) => (
@@ -223,6 +215,13 @@ function ChatInner() {
               )}
               {deepen.status === "error" && (
                 <p className={styles.error}>Couldn&rsquo;t reach the web right now.</p>
+              )}
+              {current.citations.length > 0 && (
+                <div className={styles.sources}>
+                  {current.citations.map((c) => (
+                    <SourceCard key={c.n} citation={c} />
+                  ))}
+                </div>
               )}
               {deepen.status === "done" && (
                 <div className={styles.web}>
