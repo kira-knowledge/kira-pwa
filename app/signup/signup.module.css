@@ -87,7 +87,10 @@
 }
 
 .fine {
+  /* Figma uses light text here; legibility on the mid-gradient gets a final
+     check in the live verification pass (Task 16). */
   color: #f9f9f9;
+  font-weight: 300;
   font-size: 11px;
   text-align: center;
   margin: 4px 0 0;

@@ -1,5 +1,5 @@
 "use client";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import styles from "./signup.module.css";
 
@@ -11,6 +11,13 @@ export default function SignUpPage() {
   const [confirm, setConfirm] = useState("");
   const [error, setError] = useState("");
   const [done, setDone] = useState(false);
+
+  // Redirect after the success flash; cleared if the user navigates away first.
+  useEffect(() => {
+    if (!done) return;
+    const t = setTimeout(() => router.push("/login"), 1400);
+    return () => clearTimeout(t);
+  }, [done, router]);
 
   function submit(e: React.FormEvent) {
     e.preventDefault();
@@ -25,7 +32,6 @@ export default function SignUpPage() {
     setError("");
     // Frontend-only for the demo: no account is created yet.
     setDone(true);
-    setTimeout(() => router.push("/login"), 1400);
   }
 
   return (
