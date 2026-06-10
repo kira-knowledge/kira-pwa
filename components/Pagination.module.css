@@ -1,0 +1,25 @@
+.row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  justify-content: center;
+  margin: 16px 0 8px;
+}
+.page,
+.active {
+  min-width: 34px;
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 6px 10px;
+  cursor: pointer;
+  font: inherit;
+}
+.page {
+  background: var(--card);
+  color: var(--ink);
+}
+.active {
+  background: var(--accent);
+  color: #fff;
+  border-color: var(--accent);
+}
