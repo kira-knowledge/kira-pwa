@@ -30,6 +30,7 @@ export default function PostViewer({ params }: { params: { id: string } }) {
   const [status, setStatus] = useState<SaveStatus>("idle");
   const [notFound, setNotFound] = useState(false);
   const [category, setCategory] = useState<string | null>(null);
+  const [editing, setEditing] = useState(false);
 
   useEffect(() => {
     (async () => {
@@ -62,8 +63,8 @@ export default function PostViewer({ params }: { params: { id: string } }) {
     })();
   }, [id]);
 
-  async function save() {
-    if (!edit) return;
+  async function save(): Promise<boolean> {
+    if (!edit) return false;
     setStatus("saving");
     try {
       const r = await fetch(`/api/items/${encodeURIComponent(id)}`, {
@@ -72,15 +73,17 @@ export default function PostViewer({ params }: { params: { id: string } }) {
         body: JSON.stringify(toPatch(edit)),
       });
       setStatus(r.ok ? "saved" : "error");
+      return r.ok;
     } catch {
       setStatus("error");
+      return false;
     }
   }
 
   if (notFound) {
     return (
       <main className={styles.wrap}>
-        <p className={styles.muted}>That post isn't in your library.</p>
+        <p className={styles.muted}>That post isn&rsquo;t in your library.</p>
         <button className={styles.linkBtn} onClick={() => router.push("/")}>
           ← Home
         </button>
@@ -100,77 +103,99 @@ export default function PostViewer({ params }: { params: { id: string } }) {
   return (
     <main className={styles.wrap}>
       <header className={styles.header}>
-        <button className={styles.linkBtn} onClick={() => router.back()}>
-          ←
-        </button>
-        <a className={styles.source} href={item.source_url} target="_blank" rel="noreferrer">
-          Source ↗
-        </a>
+        <button className={styles.linkBtn} onClick={() => router.back()} aria-label="Back">‹</button>
+        <a className={styles.source} href={item.source_url} target="_blank" rel="noreferrer">Source ↗</a>
       </header>
-      {category && (
-        <button
-          className={styles.categoryChip}
-          onClick={() => router.push(`/category/${encodeURIComponent(category)}`)}
-        >
-          {category}
-        </button>
-      )}
       <h1 className={styles.title}>{item.title}</h1>
 
-      <label className={styles.label}>Summary</label>
-      <textarea
-        className={styles.textarea}
-        value={edit.summary}
-        onChange={(e) => setEdit(setSummary(edit, e.target.value))}
-      />
-
-      <label className={styles.label}>Key insights</label>
-      {edit.key_insights.map((ins, i) => (
-        <div key={i} className={styles.row}>
-          <input
-            className={styles.input}
-            value={ins}
-            onChange={(e) => setEdit(setInsight(edit, i, e.target.value))}
-          />
-          <button className={styles.remove} onClick={() => setEdit(removeInsight(edit, i))}>
-            ✕
-          </button>
+      <section className={styles.card}>
+        <div className={styles.cardHead}>
+          <span>Summary</span>
+          {editing ? (
+            <button
+              className={styles.savePill}
+              onClick={async () => { if (await save()) setEditing(false); }}
+              disabled={status === "saving"}
+            >
+              {status === "saving" ? "Saving…" : "Save"}
+            </button>
+          ) : (
+            <button className={styles.pencil} onClick={() => setEditing(true)} aria-label="Edit">✎</button>
+          )}
         </div>
-      ))}
-      <button className={styles.add} onClick={() => setEdit(addInsight(edit))}>
-        + Add insight
+        {editing ? (
+          <textarea
+            className={styles.textarea}
+            value={edit.summary}
+            onChange={(e) => setEdit(setSummary(edit, e.target.value))}
+          />
+        ) : (
+          <p className={styles.summaryText}>{edit.summary}</p>
+        )}
+      </section>
+
+      <button
+        className={styles.metaChip}
+        onClick={category ? () => router.push(`/category/${encodeURIComponent(category)}`) : undefined}
+        disabled={!category}
+      >
+        {[category, "Instagram", item.author].filter(Boolean).join(" • ")}
       </button>
 
-      <label className={styles.label}>Tags</label>
-      <div className={styles.tagRow}>
-        {edit.tags.map((t) => (
-          <span key={t} className={styles.tag} onClick={() => setEdit(removeTag(edit, t))}>
-            #{t} ✕
-          </span>
-        ))}
-      </div>
-      <input
-        className={styles.input}
-        value={tagDraft}
-        placeholder="add a tag, press Enter"
-        onChange={(e) => setTagDraft(e.target.value)}
-        onKeyDown={(e) => {
-          if (e.key === "Enter") {
-            setEdit(addTag(edit, tagDraft));
-            setTagDraft("");
-          }
-        }}
-      />
-
-      <div className={styles.saveRow}>
-        <button className={styles.save} onClick={save} disabled={status === "saving"}>
-          {status === "saving" ? "Saving…" : "Save"}
-        </button>
-        {status === "saved" && <span className={styles.ok}>Saved ✓</span>}
-        {status === "error" && (
-          <span className={styles.err}>Couldn't save — your edits are kept, try again.</span>
+      <section className={`${styles.card} ${styles.insightsCard}`}>
+        <div className={styles.cardHead}><span>Key Insights</span></div>
+        {editing ? (
+          <>
+            {edit.key_insights.map((ins, i) => (
+              <div key={i} className={styles.row}>
+                <input
+                  className={styles.input}
+                  value={ins}
+                  onChange={(e) => setEdit(setInsight(edit, i, e.target.value))}
+                />
+                <button className={styles.remove} onClick={() => setEdit(removeInsight(edit, i))}>
+                  ✕
+                </button>
+              </div>
+            ))}
+            <button className={styles.add} onClick={() => setEdit(addInsight(edit))}>
+              + Add insight
+            </button>
+          </>
+        ) : (
+          edit.key_insights.map((ins, i) => (
+            <div key={i} className={styles.insight}>{ins}</div>
+          ))
         )}
-      </div>
+      </section>
+
+      {editing && (
+        <>
+          <label className={styles.label}>Tags</label>
+          <div className={styles.tagRow}>
+            {edit.tags.map((t) => (
+              <span key={t} className={styles.tag} onClick={() => setEdit(removeTag(edit, t))}>
+                #{t} ✕
+              </span>
+            ))}
+          </div>
+          <input
+            className={styles.input}
+            value={tagDraft}
+            placeholder="add a tag, press Enter"
+            onChange={(e) => setTagDraft(e.target.value)}
+            onKeyDown={(e) => {
+              if (e.key === "Enter") {
+                setEdit(addTag(edit, tagDraft));
+                setTagDraft("");
+              }
+            }}
+          />
+        </>
+      )}
+      {status === "error" && (
+        <span className={styles.err}>Couldn&rsquo;t save — your edits are kept, try again.</span>
+      )}
       <BottomNav />
     </main>
   );
