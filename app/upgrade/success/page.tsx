@@ -48,7 +48,7 @@ function SuccessInner() {
           We couldn&apos;t confirm your payment. If you were charged, your plan
           will update automatically in a moment.
         </p>
-        <button className={styles.cta} onClick={() => router.push("/upgrade")}>
+        <button className={styles.cta} onClick={() => router.replace("/upgrade")}>
           Back to Upgrade
         </button>
       </main>
@@ -62,7 +62,7 @@ function SuccessInner() {
         Welcome to KIRA Pro — Go Deeper, trend alerts and the whole toolkit are
         unlocked.
       </p>
-      <button className={styles.cta} onClick={() => router.push("/")}>
+      <button className={styles.cta} onClick={() => router.replace("/")}>
         Start exploring
       </button>
     </main>
