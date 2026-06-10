@@ -36,8 +36,9 @@ function LoginInner() {
     <main className={styles.wrap}>
       <h1 className={styles.title}>Welcome back!</h1>
       <form className={styles.form} onSubmit={submit}>
-        <label className={styles.label}>Username</label>
+        <label className={styles.label} htmlFor="login-email">Username</label>
         <input
+          id="login-email"
           className={styles.input}
           type="email"
           placeholder="Email ID"
@@ -45,8 +46,9 @@ function LoginInner() {
           onChange={(e) => setEmail(e.target.value)}
           autoComplete="email"
         />
-        <label className={styles.label}>Password</label>
+        <label className={styles.label} htmlFor="login-password">Password</label>
         <input
+          id="login-password"
           className={styles.input}
           type="password"
           value={password}
