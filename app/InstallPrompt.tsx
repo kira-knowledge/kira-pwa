@@ -2,7 +2,7 @@
 import { useEffect, useState } from "react";
 
 import styles from "./InstallPrompt.module.css";
-import { KiraMark } from "../components/icons/Icons";
+import { PhoneKIcon } from "../components/icons/Icons";
 
 type BeforeInstallPromptEvent = Event & {
   prompt: () => Promise<void>;
@@ -48,7 +48,7 @@ export default function InstallPrompt() {
   if (standalone) {
     return (
       <div className={styles.installStatic}>
-        <KiraMark size={40} />
+        <PhoneKIcon height={60} />
         <span className={styles.installCol}>
           <span className={styles.installTitle}>KIRA is ready</span>
           <span className={styles.installSub}>
@@ -63,7 +63,7 @@ export default function InstallPrompt() {
   if (installed) {
     return (
       <div className={styles.installStatic}>
-        <KiraMark size={40} />
+        <PhoneKIcon height={60} />
         <span className={styles.installCol}>
           <span className={styles.installTitle}>Added to your home screen!</span>
           <span className={styles.installSub}>
@@ -76,7 +76,7 @@ export default function InstallPrompt() {
 
   const installContent = (
     <>
-      <KiraMark size={40} />
+      <PhoneKIcon height={60} />
       <span className={styles.installCol}>
         <span className={styles.installTitle}>Add KIRA to your phone!</span>
         <span className={styles.installSub}>
