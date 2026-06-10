@@ -207,6 +207,30 @@ of stage-day disaster.
   `/subscription` data, run a portal cancel, watch the webhook downgrade, then
   run `reset-demo.mjs` and verify the flow again from scratch.
 
+## Implementation notes (post-ship reconciliation)
+
+- **Stripe account prep turned out to be one manual step:** Checkout refuses to
+  run until an account/business name is set (dashboard → Settings → Account).
+  Everything else (product, price, webhook, portal config) was created by
+  `scripts/setup-stripe.mjs` as designed.
+- **`cancel_at` vs `cancel_at_period_end`:** newer Stripe API versions express
+  a portal at-period-end cancellation as a `cancel_at` timestamp while the
+  boolean stays false. The subscription route treats either as
+  `cancelAtPeriodEnd: true`.
+- Stale subscription ids degrade gracefully (`resource_missing` → pro/no-dates
+  payload instead of 500).
+- Error responses are static strings; details go to server logs only
+  (`console.error` with `e.message`). Customer creation uses a Stripe
+  idempotency key (`create-customer-<userId>`).
+- Security hardening shipped alongside: Next.js bumped 14.2.5 → 14.2.35
+  (middleware auth-bypass CVEs), `ProfilePatch` narrows what billing flows may
+  write, webhook replay-window covered by an offline test.
+- Deferred consciously: rate limiting (no house pattern for it yet),
+  `requireSession` returning the user (house refactor), `server-only` import
+  guards. Known minor: the Figma-locked cancel button's hit-box extends under
+  the bottom nav at desktop widths (pre-existing iteration-10 CSS; phone taps
+  on the visible label work).
+
 ## Out of scope
 
 - Save/chat limits for free users; proration/plan tiers; live-mode payments;
