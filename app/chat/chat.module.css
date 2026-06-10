@@ -215,10 +215,8 @@
   margin-top: 6px;
 }
 
-/* The deepen section usually renders over the gradient's dark lower zone —
-   lift the label/captions to light so they stay readable there. */
-.web .recentLabel,
-.web .muted {
+/* Light variant for text sitting on the gradient's dark lower zone. */
+.mutedLight {
   color: #f9f9f9;
 }
 
@@ -274,7 +272,6 @@
 
 /* ── History button ──────────────────────────────────────────────────────── */
 .history {
-  margin-left: auto;
   background: none;
   border: 1px solid var(--border);
   color: var(--ink);

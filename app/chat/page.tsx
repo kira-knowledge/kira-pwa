@@ -43,7 +43,7 @@ function ChatInner() {
   const [deepen, setDeepen] = useState<DeepenState>({ status: "idle", synthesis: "", results: [] });
   const [scopeUrls, setScopeUrls] = useState<string[] | undefined>(undefined);
   const started = useRef(false);
-  const { plan } = usePlan();
+  const { plan, loading: planLoading } = usePlan();
   const deeperBtn = goDeeperButton(plan);
 
   useEffect(() => {
@@ -214,21 +214,21 @@ function ChatInner() {
               <button
                 className={styles.deepen}
                 onClick={deeperBtn.action === "deepen" ? goDeeper : () => router.push("/upgrade")}
-                disabled={deepen.status === "loading"}
+                disabled={deepen.status === "loading" || planLoading}
               >
-                {deeperBtn.label}
+                {planLoading ? "Go Deeper" : deeperBtn.label}
               </button>
               {deepen.status === "loading" && (
-                <p className={styles.muted}>Searching the web…</p>
+                <p className={styles.mutedLight}>Searching the web…</p>
               )}
               {deepen.status === "error" && (
-                <p className={styles.muted}>Couldn&rsquo;t reach the web right now.</p>
+                <p className={styles.error}>Couldn&rsquo;t reach the web right now.</p>
               )}
               {deepen.status === "done" && (
                 <div className={styles.web}>
-                  <div className={styles.recentLabel}>FROM THE WEB</div>
+                  <div className={`${styles.recentLabel} ${styles.mutedLight}`}>FROM THE WEB</div>
                   {deepen.results.length === 0 ? (
-                    <p className={styles.muted}>No web results found.</p>
+                    <p className={styles.mutedLight}>No web results found.</p>
                   ) : (
                     <>
                       {deepen.synthesis && (
