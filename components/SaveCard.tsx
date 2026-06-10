@@ -29,6 +29,7 @@ export default function SaveCard({
   }, [src]);
   return (
     <button
+      type="button"
       className={className}
       onClick={() => router.push(`/post/${encodeURIComponent(item.id)}`)}
     >
