@@ -6,20 +6,27 @@ import styles from "./categories.module.css";
 import shared from "../shared.module.css";
 import TopBar from "../../components/TopBar";
 import BottomNav from "../../components/BottomNav";
+import { filterUnclassified } from "../../lib/categoryFilter";
 
-type Theme = { name: string; why: string; count: number };
+type Theme = { name: string; why: string; count: number; source_urls?: string[] };
 
 export default function CategoriesPage() {
   const router = useRouter();
   const [themes, setThemes] = useState<Theme[] | null>(null);
   const [ready, setReady] = useState(true);
+  const [unclassified, setUnclassified] = useState(0);
 
   useEffect(() => {
-    fetch("/api/themes", { cache: "no-store" })
-      .then((r) => r.json())
-      .then((d) => {
-        setThemes(Array.isArray(d?.themes) ? d.themes : []);
+    Promise.all([
+      fetch("/api/themes", { cache: "no-store" }).then((r) => r.json()),
+      fetch("/api/library", { cache: "no-store" }).then((r) => r.json()),
+    ])
+      .then(([d, lib]) => {
+        const th = Array.isArray(d?.themes) ? d.themes : [];
+        setThemes(th);
         setReady(d?.ready !== false);
+        const all = Array.isArray(lib) ? lib : [];
+        setUnclassified(filterUnclassified(all, th).length);
       })
       .catch(() => setThemes([]));
   }, []);
@@ -50,6 +57,18 @@ export default function CategoriesPage() {
             <span className={styles.rowCount}>{t.count}</span>
           </button>
         ))}
+        {unclassified > 0 && (
+          <button
+            className={`${shared.card} ${styles.row}`}
+            onClick={() => router.push("/category/Unclassified")}
+          >
+            <div className={styles.rowText}>
+              <div className={styles.rowName}>Unclassified</div>
+              <div className={styles.rowWhy}>Saves KIRA hasn&rsquo;t grouped yet.</div>
+            </div>
+            <span className={styles.rowCount}>{unclassified}</span>
+          </button>
+        )}
       </div>
       <BottomNav active="categories" />
     </main>
