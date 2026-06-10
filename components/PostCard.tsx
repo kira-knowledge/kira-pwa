@@ -1,5 +1,5 @@
 "use client";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import styles from "./PostCard.module.css";
 import { thumbSrc } from "../lib/thumb";
@@ -19,6 +19,9 @@ export default function PostCard({ item }: { item: PostItem }) {
   const router = useRouter();
   const [thumbFailed, setThumbFailed] = useState(false);
   const src = thumbSrc(item);
+  useEffect(() => {
+    setThumbFailed(false);
+  }, [src]);
   const open = () => router.push(`/post/${encodeURIComponent(item.id)}`);
   return (
     <article
