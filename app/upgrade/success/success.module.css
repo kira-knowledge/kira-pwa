@@ -1,0 +1,46 @@
+.wrap {
+  min-height: 100dvh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 24px;
+  text-align: center;
+}
+
+.party {
+  font-size: 56px;
+  margin-bottom: 12px;
+}
+
+.title {
+  font-size: 28px;
+  font-weight: 700;
+  color: #101a24;
+  margin: 0 0 10px;
+}
+
+.lead {
+  font-size: 15px;
+  line-height: 1.5;
+  color: #3a4654;
+  max-width: 320px;
+  margin: 0 0 24px;
+}
+
+.confirming {
+  font-size: 15px;
+  color: #3a4654;
+}
+
+.cta {
+  appearance: none;
+  border: 0;
+  border-radius: 999px;
+  padding: 14px 36px;
+  font-size: 16px;
+  font-weight: 600;
+  color: #fff;
+  background: #d4332b;
+  cursor: pointer;
+}

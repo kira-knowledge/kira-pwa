@@ -1,22 +1,68 @@
 "use client";
+import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import TopBar from "../../components/TopBar";
 import BottomNav from "../../components/BottomNav";
+import { formatDateLong } from "../../lib/billing";
 import styles from "./subscription.module.css";
 
-const DETAILS: Array<[string, string]> = [
-  ["Plan", "Monthly plan"],
-  ["Start Date", "21 June 2025"],
-  ["Next Renewal", "20 July 2026"],
-  ["Amount Paid", "$2"],
-];
+type SubView = {
+  plan: "free" | "pro";
+  priceUsd?: number;
+  startDate?: string | null;
+  nextRenewal?: string | null;
+  cancelAtPeriodEnd?: boolean;
+};
 
 export default function SubscriptionPage() {
   const router = useRouter();
+  const [sub, setSub] = useState<SubView | null>(null);
+  const [busy, setBusy] = useState(false);
+  const [error, setError] = useState<string | null>(null);
 
-  function cancelSubscription() {
-    // TODO: Stripe customer portal — redirect to the billing portal session.
+  useEffect(() => {
+    let active = true;
+    (async () => {
+      try {
+        const r = await fetch("/api/stripe/subscription", { cache: "no-store" });
+        if (!r.ok) throw new Error("fetch failed");
+        const data: SubView = await r.json();
+        if (!active) return;
+        if (data.plan !== "pro") {
+          router.replace("/upgrade");
+          return;
+        }
+        setSub(data);
+      } catch {
+        if (active) setError("Couldn't load your subscription.");
+      }
+    })();
+    return () => {
+      active = false;
+    };
+  }, [router]);
+
+  async function cancelSubscription() {
+    setBusy(true);
+    setError(null);
+    try {
+      const r = await fetch("/api/stripe/portal", { method: "POST" });
+      const data = await r.json().catch(() => null);
+      if (!r.ok || !data?.url) throw new Error("portal failed");
+      window.location.assign(data.url);
+    } catch {
+      setError("Couldn't open the billing portal — try again.");
+      setBusy(false);
+    }
   }
+
+  const price = sub ? `$${sub.priceUsd ?? 2}` : "—";
+  const details: Array<[string, string]> = [
+    ["Plan", "Monthly plan"],
+    ["Start Date", sub ? formatDateLong(sub.startDate) : "—"],
+    ["Next Renewal", sub ? formatDateLong(sub.nextRenewal) : "—"],
+    ["Amount Paid", price],
+  ];
 
   return (
     <main className={styles.wrap}>
@@ -31,12 +77,12 @@ export default function SubscriptionPage() {
           <div className={styles.planName}>Your plan</div>
           <div className={styles.planSub}>Monthly payment</div>
         </div>
-        <div className={styles.planPrice}>$2</div>
+        <div className={styles.planPrice}>{price}</div>
       </section>
 
       <section className={styles.card}>
         <div className={styles.cardHead}>Subscription Details</div>
-        {DETAILS.map(([k, v]) => (
+        {details.map(([k, v]) => (
           <div key={k} className={styles.row}>
             <span className={styles.rowLabel}>{k}</span>
             <span className={styles.rowValue}>{v}</span>
@@ -45,8 +91,17 @@ export default function SubscriptionPage() {
       </section>
 
       <p className={styles.disclaimer}>Disclaimer: All plans can be cancelled at any time.</p>
+      {error && <p className={styles.error} role="alert">{error}</p>}
       <button className={styles.primary} onClick={() => router.push("/")}>Return Home</button>
-      <button className={styles.cancel} onClick={cancelSubscription}>Cancel Subscription</button>
+      {sub?.cancelAtPeriodEnd ? (
+        <p className={styles.cancelNote}>
+          Cancels on {formatDateLong(sub.nextRenewal)}
+        </p>
+      ) : (
+        <button className={styles.cancel} onClick={cancelSubscription} disabled={busy || !sub}>
+          {busy ? "Opening portal…" : "Cancel Subscription"}
+        </button>
+      )}
       <BottomNav />
     </main>
   );

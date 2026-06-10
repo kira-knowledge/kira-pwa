@@ -1,5 +1,7 @@
 "use client";
+import { useState } from "react";
 import { useRouter } from "next/navigation";
+import { usePlan } from "../../lib/usePlan";
 import styles from "./upgrade.module.css";
 
 const FEATURES: Array<[string, string]> = [
@@ -13,10 +15,32 @@ const FEATURES: Array<[string, string]> = [
 
 export default function UpgradePage() {
   const router = useRouter();
+  const { plan } = usePlan();
+  const [busy, setBusy] = useState(false);
+  const [error, setError] = useState<string | null>(null);
 
-  function startCheckout() {
-    // TODO: Stripe Checkout — create a Checkout Session server-side and redirect.
-    // Wire here when Stripe is integrated; until then this is a visual stub.
+  async function startCheckout() {
+    if (plan === "pro") {
+      router.push("/subscription");
+      return;
+    }
+    setBusy(true);
+    setError(null);
+    try {
+      const r = await fetch("/api/stripe/checkout", { method: "POST" });
+      if (r.status === 409) {
+        router.push("/subscription");
+        return;
+      }
+      const data = await r.json().catch(() => null);
+      if (!r.ok || !data?.url) {
+        throw new Error(data?.error ?? "checkout failed");
+      }
+      window.location.assign(data.url);
+    } catch {
+      setError("Couldn't start checkout — try again.");
+      setBusy(false);
+    }
   }
 
   return (
@@ -35,7 +59,12 @@ export default function UpgradePage() {
           </li>
         ))}
       </ul>
-      <button className={styles.cta} onClick={startCheckout}>Sign Up</button>
+      <button className={styles.cta} onClick={startCheckout} disabled={busy}>
+        {busy ? "Redirecting…" : plan === "pro" ? "Manage Subscription" : "Sign Up"}
+      </button>
+      {error && (
+        <p className={styles.error} role="alert">{error}</p>
+      )}
     </main>
   );
 }
