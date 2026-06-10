@@ -48,7 +48,24 @@ export async function GET() {
       priceUsd: typeof unitAmount === "number" ? unitAmount / 100 : 2,
     });
   } catch (e) {
-    console.error("[stripe/subscription]", e instanceof Error ? e.message : String(e));
-    return NextResponse.json({ error: "subscription lookup failed" }, { status: 500 });
+    // Stale subscription id (e.g. cancelled + cleared out-of-band) must not
+    // 500 the page — degrade to the no-dates payload instead.
+    if ((e as { code?: string })?.code === "resource_missing") {
+      return NextResponse.json({
+        plan: "pro",
+        startDate: null,
+        nextRenewal: null,
+        cancelAtPeriodEnd: false,
+        priceUsd: 2,
+      });
+    }
+    console.error(
+      "[stripe/subscription]",
+      e instanceof Error ? e.message : String(e)
+    );
+    return NextResponse.json(
+      { error: "subscription lookup failed" },
+      { status: 500 }
+    );
   }
 }
