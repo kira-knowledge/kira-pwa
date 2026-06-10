@@ -1,0 +1,152 @@
+/* Subscription Details page — sits on the global gradient (no background override) */
+
+.wrap {
+  max-width: 480px;
+  margin: 0 auto;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  padding: 23px 21px 0;
+}
+
+.header {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  gap: 8px;
+  margin-top: 12px;
+}
+
+.back {
+  background: none;
+  border: none;
+  color: var(--navy);
+  font-size: 24px;
+  line-height: 1;
+  cursor: pointer;
+  padding: 0;
+  flex-shrink: 0;
+}
+
+.back:focus-visible {
+  outline: 2px solid var(--navy);
+  outline-offset: 2px;
+}
+
+.title {
+  color: var(--navy);
+  font-size: 20px;
+  font-weight: 700;
+  margin: 0;
+}
+
+/* Accent-coloured plan summary card */
+.planCard {
+  background: var(--accent);
+  border-radius: 10px;
+  color: #fff;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 16px;
+  margin-top: 16px;
+}
+
+.planName {
+  font-size: 15px;
+  font-weight: 600;
+}
+
+.planSub {
+  color: var(--plan-card-text);
+  font-size: 12px;
+  margin-top: 2px;
+}
+
+.planPrice {
+  font-size: 24px;
+  font-weight: 700;
+}
+
+/* White details card — mirrors profile.module.css card */
+.card {
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-card);
+  padding: 4px 15px;
+  margin-top: 16px;
+}
+
+.cardHead {
+  font-size: 15px;
+  font-weight: 600;
+  color: var(--ink);
+  padding: 10px 0;
+  border-bottom: 1px solid var(--border);
+}
+
+.row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 12px;
+  padding: 10px 0;
+  border-top: 1px solid var(--border);
+}
+
+.rowLabel {
+  color: var(--muted);
+  font-size: 13px;
+  flex-shrink: 0;
+}
+
+.rowValue {
+  color: var(--ink);
+  font-size: 13px;
+  text-align: right;
+}
+
+/* Disclaimer sits low on the navy portion of the gradient */
+.disclaimer {
+  color: #f9f9f9;
+  font-size: 12px;
+  text-align: center;
+  margin-top: auto;
+}
+
+/* White pill — same style as profile primary, but margin-top: 12px
+   since disclaimer already carries margin-top: auto */
+.primary {
+  background: #fff;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-card);
+  padding: 12px;
+  width: 100%;
+  color: var(--navy);
+  font-weight: 600;
+  font-size: 15px;
+  margin-top: 12px;
+  cursor: pointer;
+}
+
+.primary:focus-visible {
+  outline: 2px solid var(--navy);
+  outline-offset: 2px;
+}
+
+/* Subtle text-only cancel link */
+.cancel {
+  color: #f9f9f9;
+  background: none;
+  border: none;
+  padding: 16px 0 90px;
+  cursor: pointer;
+  font-size: 14px;
+  width: 100%;
+  text-align: center;
+}
+
+.cancel:focus-visible {
+  outline: 2px solid #fff;
+  outline-offset: 2px;
+}

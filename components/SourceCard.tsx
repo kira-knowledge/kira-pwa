@@ -1,8 +1,12 @@
 "use client";
 import { Citation } from "../lib/chatHistory";
+import { citationThumbSrc } from "../lib/citationThumb";
 import styles from "../app/chat/chat.module.css";
 
 export default function SourceCard({ citation }: { citation: Citation }) {
+  // Raw citation.thumbnail URLs are CORP-blocked by the browser; go through
+  // the same-origin /api/thumb proxy instead (empty when underivable).
+  const thumb = citationThumbSrc(citation.source_url);
   return (
     <a
       id={`source-${citation.n}`}
@@ -11,10 +15,10 @@ export default function SourceCard({ citation }: { citation: Citation }) {
       target="_blank"
       rel="noreferrer"
     >
-      {citation.thumbnail ? (
+      {thumb ? (
         <img
           className={styles.sourceThumb}
-          src={citation.thumbnail}
+          src={thumb}
           alt=""
           onError={(e) => {
             (e.target as HTMLImageElement).style.display = "none";

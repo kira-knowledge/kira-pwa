@@ -2,10 +2,21 @@
   min-height: 100vh;
   display: flex;
   flex-direction: column;
-  padding: 48px 24px 0;
+  padding: 32px 24px 0;
   max-width: 420px;
   margin: 0 auto;
   /* No background — sits on the global white→navy gradient */
+}
+
+.back {
+  background: none;
+  border: none;
+  color: var(--navy);
+  font-size: 28px;
+  align-self: flex-start;
+  cursor: pointer;
+  padding: 0;
+  line-height: 1;
 }
 
 .title {
@@ -13,7 +24,7 @@
   font-weight: 700;
   color: var(--navy);
   text-align: center;
-  margin: 48px 0 32px;
+  margin: 24px 0 20px;
 }
 
 .form {
@@ -40,7 +51,7 @@
   color: var(--navy);
   width: 100%;
   box-sizing: border-box;
-  margin-bottom: 12px;
+  margin-bottom: 10px;
 }
 
 .input::placeholder {
@@ -53,7 +64,7 @@
 }
 
 .button {
-  background: var(--accent);
+  background: var(--coral);
   color: #fff;
   border-radius: 10px;
   padding: 12px;
@@ -65,9 +76,8 @@
   margin-top: 4px;
 }
 
-.button:disabled {
-  opacity: 0.6;
-  cursor: not-allowed;
+.button:hover {
+  opacity: 0.92;
 }
 
 .error {
@@ -76,22 +86,19 @@
   margin: 0 0 4px;
 }
 
-.footer {
-  margin-top: auto;
-  text-align: center;
-  padding-bottom: 48px;
-}
-
-.footerLead {
+.fine {
+  /* Figma uses light text here; legibility on the mid-gradient gets a final
+     check in the live verification pass (Task 16). */
   color: #f9f9f9;
-  font-size: 14px;
-  margin: 0 0 4px;
+  font-weight: 300;
+  font-size: 11px;
+  text-align: center;
+  margin: 4px 0 0;
 }
 
-.footerLink {
-  color: #fff;
-  font-weight: 700;
-  font-size: 22px;
-  text-decoration: none;
-  display: block;
+.success {
+  color: #f9f9f9;
+  font-size: 16px;
+  text-align: center;
+  margin-top: 48px;
 }

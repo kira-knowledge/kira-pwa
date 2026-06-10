@@ -38,26 +38,30 @@ export default function SharePage() {
     return () => clearTimeout(t);
   }, [phase]);
 
-  const text: Record<Phase, string> = {
-    saving: "Saving to KIRA…",
-    saved: "Saved ✓",
-    nolink: "No Instagram link found",
-    error: "Couldn't save",
-  };
-
   return (
     <main className={styles.wrap}>
-      <div className={styles.toast}>
-        <div className={styles.big}>{text[phase]}</div>
-        {phase === "saved" && showReturn && (
-          <div className={styles.hint}>You can return to Instagram.</div>
-        )}
-        {(phase === "nolink" || phase === "error") && (
-          <a className={styles.link} href="/">
-            Open KIRA →
-          </a>
-        )}
-      </div>
+      {phase === "saving" && <div className={styles.big}>Saving to KIRA…</div>}
+      {phase === "saved" && (
+        <div className={styles.confirm}>
+          <h1 className={styles.savedTitle}>Saved!</h1>
+          <div className={styles.checkCircle}>
+            <svg viewBox="0 0 52 52" className={styles.checkSvg} aria-hidden="true">
+              <path className={styles.checkPath} fill="none" stroke="#fff" strokeWidth="5"
+                strokeLinecap="round" d="M14 27l8 8 16-18" />
+            </svg>
+          </div>
+          <p className={styles.savedSub}>Your post has been saved to KIRA</p>
+          {showReturn && <p className={styles.hint}>You can return to Instagram.</p>}
+        </div>
+      )}
+      {(phase === "nolink" || phase === "error") && (
+        <div className={styles.confirm}>
+          <div className={styles.big}>
+            {phase === "nolink" ? "No Instagram link found" : "Couldn&rsquo;t save"}
+          </div>
+          <a className={styles.link} href="/">Open KIRA →</a>
+        </div>
+      )}
     </main>
   );
 }

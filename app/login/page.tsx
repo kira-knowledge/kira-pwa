@@ -20,7 +20,10 @@ function LoginInner() {
       const supabase = createClient();
       const { error } = await supabase.auth.signInWithPassword({ email, password });
       if (error) {
-        setError("Wrong email or password.");
+        // Supabase wraps network failures in an error object too (status 0 /
+        // undefined) — don't blame the user's credentials for those.
+        const badCreds = typeof error.status === "number" && error.status >= 400 && error.status < 500;
+        setError(badCreds ? "Wrong email or password." : "Can't sign in right now — try again.");
         setBusy(false);
         return;
       }
@@ -34,29 +37,36 @@ function LoginInner() {
 
   return (
     <main className={styles.wrap}>
-      <h1 className={styles.title}>KIRA</h1>
+      <h1 className={styles.title}>Welcome back!</h1>
       <form className={styles.form} onSubmit={submit}>
+        <label className={styles.label} htmlFor="login-email">Username</label>
         <input
+          id="login-email"
           className={styles.input}
           type="email"
-          placeholder="Email"
+          placeholder="Email ID"
           value={email}
           onChange={(e) => setEmail(e.target.value)}
           autoComplete="email"
         />
+        <label className={styles.label} htmlFor="login-password">Password</label>
         <input
+          id="login-password"
           className={styles.input}
           type="password"
-          placeholder="Password"
           value={password}
           onChange={(e) => setPassword(e.target.value)}
           autoComplete="current-password"
         />
         {error && <p className={styles.error}>{error}</p>}
         <button className={styles.button} type="submit" disabled={busy}>
-          {busy ? "Signing in…" : "Sign in"}
+          {busy ? "Signing in…" : "Log In"}
         </button>
       </form>
+      <div className={styles.footer}>
+        <p className={styles.footerLead}>Ready to find what&rsquo;s forgotten?</p>
+        <a className={styles.footerLink} href="/signup">Sign up!</a>
+      </div>
     </main>
   );
 }

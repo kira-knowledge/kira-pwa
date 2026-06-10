@@ -1,71 +1,149 @@
+/* ── Layout ─────────────────────────────────────────────────────────────── */
 .wrap {
   max-width: 720px;
   margin: 0 auto;
-  padding: 16px 16px 96px;
+  padding: 16px 16px 140px;
   color: var(--ink);
 }
+
+/* ── Header ─────────────────────────────────────────────────────────────── */
 .header {
   display: flex;
   align-items: center;
-  gap: 12px;
-  margin-bottom: 16px;
+  gap: 8px;
+  margin-bottom: 20px;
+  flex-wrap: nowrap;
 }
+
 .back {
   background: none;
-  border: 1px solid var(--border);
-  color: var(--ink);
-  border-radius: 8px;
-  padding: 4px 10px;
-  font-size: 18px;
+  border: none;
+  color: var(--navy);
+  font-size: 24px;
+  line-height: 1;
+  padding: 0 4px;
   cursor: pointer;
+  flex-shrink: 0;
 }
+
 .title {
-  font-size: 18px;
+  font-size: 22px;
+  font-weight: 700;
+  color: var(--navy);
   margin: 0;
+  white-space: nowrap;
+  flex-shrink: 0;
 }
+
+.tagline {
+  font-size: 12px;
+  color: var(--muted);
+  font-style: italic;
+  flex: 1;
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+/* ── Thread ─────────────────────────────────────────────────────────────── */
+.thread {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+/* User question bubble — right-aligned grey-blue */
+.question {
+  background: var(--bubble);
+  color: var(--ink);
+  border-radius: 10px;
+  padding: 12px 16px;
+  margin-left: auto;
+  max-width: 80%;
+  width: fit-content;
+  align-self: flex-end;
+}
+
+/* Answer card — white, left-anchored, HARD MAX 85% */
+.answerCard {
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  padding: 14px 16px;
+  /* box-sizing: border-box so max-width includes padding (content-box default
+     would add 32px of padding on top of the 85% cap, busting the limit). */
+  box-sizing: border-box;
+  max-width: 85%;
+  /* align-self: flex-start collapses flex-column stretch so max-width is
+     actually respected (without it the item stretches to 100% of the track). */
+  align-self: flex-start;
+}
+
+/* AnswerWithCitations renders a .answer div inside — reset it so answerCard
+   is the only card box (no double border/background). */
+.answer {
+  background: transparent;
+  border: none;
+  border-radius: 0;
+  padding: 0;
+  line-height: 1.5;
+}
+
+.answerPara {
+  margin: 0 0 8px;
+}
+.answerPara:last-child {
+  margin-bottom: 0;
+}
+
+.answerList {
+  margin: 0 0 8px;
+  padding-left: 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+.answerList:last-child {
+  margin-bottom: 0;
+}
+.answerList li {
+  line-height: 1.5;
+}
+
+.citeMark {
+  color: var(--accent);
+  font-weight: 700;
+  text-decoration: none;
+}
+
+/* ── Sources card ────────────────────────────────────────────────────────── */
+.sources {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  padding: 14px;
+}
+
+/* "Sources" label — navy, 16px/600, not the shared muted recentLabel style */
+.sourcesLabel {
+  font-size: 16px;
+  font-weight: 600;
+  color: var(--navy);
+  margin: 0 0 6px;
+}
+
+/* recentLabel remains for RECENT / FROM THE WEB labels */
 .recentLabel {
   font-size: 11px;
   letter-spacing: 0.08em;
   color: var(--muted);
   margin: 8px 0 6px;
 }
-.recent {
-  display: flex;
-  flex-direction: column;
-  gap: 6px;
-}
-.recentItem {
-  text-align: left;
-  background: var(--card);
-  border: 1px solid var(--border);
-  color: var(--ink);
-  border-radius: 10px;
-  padding: 10px 12px;
-  cursor: pointer;
-}
-.muted { color: var(--muted); }
-.error { color: #c0392b; }
-.thread { display: flex; flex-direction: column; gap: 10px; }
-.question {
-  align-self: flex-end;
-  max-width: 85%;
-  background: rgba(74, 127, 165, 0.15);
-  border-radius: 12px;
-  padding: 8px 12px;
-}
-.answer {
-  background: var(--card);
-  border: 1px solid var(--border);
-  border-radius: 12px;
-  padding: 12px 14px;
-  line-height: 1.5;
-}
-.citeMark {
-  color: var(--accent);
-  font-weight: 700;
-  text-decoration: none;
-}
-.sources { display: flex; flex-direction: column; gap: 6px; }
+
 .sourceCard {
   display: flex;
   align-items: center;
@@ -77,33 +155,134 @@
   text-decoration: none;
   background: var(--card);
 }
-.sourceThumb, .sourceThumbFallback {
+
+.sourceThumb,
+.sourceThumbFallback {
   width: 40px;
   height: 40px;
   border-radius: 8px;
   object-fit: cover;
   flex: none;
 }
-.sourceThumbFallback { background: var(--border); }
-.sourceAuthor { color: var(--muted); font-size: 13px; }
-.chips { display: flex; flex-wrap: wrap; gap: 8px; }
-.chip {
-  background: var(--pill);
-  border: 1px solid var(--border);
-  color: var(--ink);
-  border-radius: 16px;
-  padding: 4px 12px;
-  cursor: pointer;
+.sourceThumbFallback {
+  background: var(--border);
 }
-.deepen {
-  align-self: flex-start;
-  background: none;
+
+.sourceAuthor {
+  color: var(--muted);
+  font-size: 13px;
+}
+
+/* ── Suggested chips — white card with steel-blue border/text ───────────── */
+.chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.chip {
+  background: var(--card);
   border: 1px solid var(--accent);
   color: var(--accent);
-  border-radius: 8px;
-  padding: 6px 12px;
+  border-radius: 25px;
+  padding: 6px 16px;
+  cursor: pointer;
+  font-size: 14px;
+}
+
+/* ── Go Deeper button — full-width steel-blue ────────────────────────────── */
+.deepen {
+  background: var(--accent);
+  color: #fff;
+  border: none;
+  border-radius: 10px;
+  padding: 14px;
+  width: 100%;
+  font-weight: 600;
+  font-size: 16px;
   cursor: pointer;
 }
+.deepen:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+/* ── FROM THE WEB section ────────────────────────────────────────────────── */
+.web {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  margin-top: 6px;
+}
+
+/* Light variant for text sitting on the gradient's dark lower zone. */
+.mutedLight {
+  color: #f9f9f9;
+}
+
+.webCard {
+  border: 1px solid var(--border);
+  border-left: 3px solid var(--accent);
+  border-radius: 10px;
+  padding: 10px 12px;
+  color: var(--ink);
+  text-decoration: none;
+  background: var(--card);
+}
+
+.webBadge {
+  font-size: 12px;
+}
+.webMeta {
+  color: var(--accent);
+  font-size: 12px;
+  margin-top: 2px;
+}
+.webSnippet {
+  color: var(--muted);
+  font-size: 13px;
+  margin-top: 4px;
+  line-height: 1.4;
+}
+
+/* ── Recent list (idle state) ────────────────────────────────────────────── */
+.recent {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.recentItem {
+  text-align: left;
+  background: var(--card);
+  border: 1px solid var(--border);
+  color: var(--ink);
+  border-radius: 10px;
+  padding: 10px 12px;
+  cursor: pointer;
+}
+
+/* ── Utility ─────────────────────────────────────────────────────────────── */
+.muted {
+  color: var(--muted);
+}
+.error {
+  color: var(--red);
+}
+
+/* ── History button ──────────────────────────────────────────────────────── */
+.history {
+  background: none;
+  border: 1px solid var(--border);
+  color: var(--ink);
+  border-radius: 8px;
+  padding: 4px 12px;
+  font: inherit;
+  cursor: pointer;
+  flex-shrink: 0;
+}
+
+/* ── Ask bar (fixed bottom) ──────────────────────────────────────────────── */
 .askBar {
   position: fixed;
   bottom: 0;
@@ -117,6 +296,7 @@
   backdrop-filter: blur(7px);
   -webkit-backdrop-filter: blur(7px);
 }
+
 .askInput {
   flex: 1;
   background: var(--card);
@@ -124,7 +304,13 @@
   color: var(--ink);
   border-radius: 10px;
   padding: 10px 12px;
+  font: inherit;
 }
+
+.askInput::placeholder {
+  color: var(--muted);
+}
+
 .askSend {
   background: var(--accent);
   border: none;
@@ -132,51 +318,5 @@
   border-radius: 10px;
   padding: 10px 16px;
   cursor: pointer;
-}
-.web {
-  display: flex;
-  flex-direction: column;
-  gap: 6px;
-  margin-top: 6px;
-}
-.webCard {
-  border: 1px solid var(--border);
-  border-left: 3px solid #36c5d6;
-  border-radius: 10px;
-  padding: 10px 12px;
-  color: var(--ink);
-  text-decoration: none;
-  background: rgba(54, 197, 214, 0.06);
-}
-.webBadge { font-size: 12px; }
-.webMeta { color: #2b7a8a; font-size: 12px; margin-top: 2px; }
-.webSnippet { color: var(--muted); font-size: 13px; margin-top: 4px; line-height: 1.4; }
-.history {
-  margin-left: auto;
-  background: none;
-  border: 1px solid var(--border);
-  color: var(--ink);
-  border-radius: 8px;
-  padding: 4px 12px;
-  font: inherit;
-  cursor: pointer;
-}
-.answerPara {
-  margin: 0 0 8px;
-}
-.answerPara:last-child {
-  margin-bottom: 0;
-}
-.answerList {
-  margin: 0 0 8px;
-  padding-left: 20px;
-  display: flex;
-  flex-direction: column;
-  gap: 4px;
-}
-.answerList:last-child {
-  margin-bottom: 0;
-}
-.answerList li {
-  line-height: 1.5;
+  font-weight: 600;
 }

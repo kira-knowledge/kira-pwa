@@ -10,6 +10,15 @@
   --nav-bg: rgba(251, 252, 253, 0.8);
   --radius-card: 10px;
   --radius-pill: 25px;
+  --coral: #e27c74;
+  --red: #d4332b;
+  --bubble: #bdc6d0;
+  --insight-bg: #c3cbd4;
+  --plan-card-text: #e6f6f5;
+}
+
+html {
+  background: #f9f9f9;
 }
 
 html,
@@ -17,7 +26,9 @@ body {
   margin: 0;
   min-height: 100vh;
   color: var(--ink);
-  background: #f9f9f9;
+  /* NOTE: body must stay transparent — an opaque body background paints OVER
+     the fixed body::before gradient layer below (negative z-index pseudo
+     elements render beneath in-flow backgrounds). Flat fallback lives on html. */
 }
 
 /* Fixed gradient layer — robust on mobile where background-attachment: fixed is flaky. */
