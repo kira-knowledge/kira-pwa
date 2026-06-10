@@ -10,6 +10,8 @@ import SearchBox from "../components/SearchBox";
 import CategoryPills, { PillTheme } from "../components/CategoryPills";
 import BottomNav from "../components/BottomNav";
 import SaveCard from "../components/SaveCard";
+import { useUser } from "../lib/useUser";
+import { firstNameFrom } from "../lib/name";
 
 type Item = {
   id: string;
@@ -31,6 +33,8 @@ export default function Library() {
   const [themes, setThemes] = useState<PillTheme[]>([]);
   const [err, setErr] = useState("");
   const lastThemeCount = useRef<number>(-1);
+  const { email, fullName } = useUser();
+  const first = firstNameFrom(fullName, email);
 
   async function loadThemes() {
     try {
@@ -67,7 +71,7 @@ export default function Library() {
   return (
     <main className={shared.wrap}>
       <TopBar />
-      <p className={styles.greeting}>Hi there!</p>
+      <p className={styles.greeting}>{first ? `Hi ${first}!` : "Hi there!"}</p>
       <SearchBox placeholder="What are we looking for today?" />
       <button
         className={styles.suggested}
@@ -79,7 +83,7 @@ export default function Library() {
 
       <InstallPrompt />
 
-      <h2 className={shared.sectionTitle}>Categories</h2>
+      <h2 className={shared.sectionTitle}>Knowledge</h2>
       {themes.length === 0 ? (
         <p className={shared.muted}>Save a few more reels and KIRA will group them into categories.</p>
       ) : (
