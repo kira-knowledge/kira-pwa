@@ -44,35 +44,8 @@ export default function InstallPrompt() {
     setDeferred(null);
   }
 
-  // Already running as the installed app → show how to use it.
-  if (standalone) {
-    return (
-      <div className={styles.installStatic}>
-        <PhoneKIcon height={60} />
-        <span className={styles.installCol}>
-          <span className={styles.installTitle}>KIRA is ready</span>
-          <span className={styles.installSub}>
-            In Instagram, tap <strong>Share → KIRA</strong> on any reel to save it here.
-          </span>
-        </span>
-      </div>
-    );
-  }
-
-  // Just installed (still in the browser tab).
-  if (installed) {
-    return (
-      <div className={styles.installStatic}>
-        <PhoneKIcon height={60} />
-        <span className={styles.installCol}>
-          <span className={styles.installTitle}>Added to your home screen!</span>
-          <span className={styles.installSub}>
-            Open KIRA from your home screen, then in Instagram tap <strong>Share → KIRA</strong>.
-          </span>
-        </span>
-      </div>
-    );
-  }
+  // Installed (running standalone, or just installed from this tab) → nothing to prompt.
+  if (standalone || installed) return null;
 
   const installContent = (
     <>

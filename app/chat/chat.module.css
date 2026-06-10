@@ -135,23 +135,19 @@
   text-decoration: none;
 }
 
-/* ── Sources card ────────────────────────────────────────────────────────── */
+/* ── Sources — plain text lines, no header, no thumbnails ────────────────── */
 .sources {
   display: flex;
   flex-direction: column;
-  gap: 6px;
-  background: var(--card);
-  border: 1px solid var(--border);
-  border-radius: 10px;
-  padding: 14px;
+  gap: 8px;
 }
 
-/* "Sources" label — navy, 16px/600, not the shared muted recentLabel style */
-.sourcesLabel {
-  font-size: 16px;
-  font-weight: 600;
-  color: var(--navy);
-  margin: 0 0 6px;
+.sourceLine {
+  color: var(--ink);
+  font-size: 13px;
+  font-weight: 400;
+  text-decoration: none;
+  line-height: 1.4;
 }
 
 /* recentLabel remains for RECENT / FROM THE WEB labels */
@@ -160,35 +156,6 @@
   letter-spacing: 0.08em;
   color: var(--muted);
   margin: 8px 0 6px;
-}
-
-.sourceCard {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  border: 1px solid var(--border);
-  border-radius: 10px;
-  padding: 8px;
-  color: var(--ink);
-  text-decoration: none;
-  background: var(--card);
-}
-
-.sourceThumb,
-.sourceThumbFallback {
-  width: 40px;
-  height: 40px;
-  border-radius: 8px;
-  object-fit: cover;
-  flex: none;
-}
-.sourceThumbFallback {
-  background: var(--border);
-}
-
-.sourceAuthor {
-  color: var(--muted);
-  font-size: 13px;
 }
 
 /* ── Suggested chips — white card with steel-blue border/text ───────────── */
