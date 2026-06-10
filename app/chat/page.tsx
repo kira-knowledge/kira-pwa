@@ -232,11 +232,13 @@ function ChatInner() {
                   ) : (
                     <>
                       {deepen.synthesis && (
-                        <AnswerWithCitations
-                          answer={deepen.synthesis}
-                          citations={deepen.results}
-                          anchorPrefix="web-source"
-                        />
+                        <div className={styles.answerCard}>
+                          <AnswerWithCitations
+                            answer={deepen.synthesis}
+                            citations={deepen.results}
+                            anchorPrefix="web-source"
+                          />
+                        </div>
                       )}
                       {deepen.results.map((r) => (
                         <WebResultCard key={r.n} result={r} />

@@ -215,6 +215,13 @@
   margin-top: 6px;
 }
 
+/* The deepen section usually renders over the gradient's dark lower zone —
+   lift the label/captions to light so they stay readable there. */
+.web .recentLabel,
+.web .muted {
+  color: #f9f9f9;
+}
+
 .webCard {
   border: 1px solid var(--border);
   border-left: 3px solid var(--accent);
