@@ -29,10 +29,13 @@ export async function POST() {
     const stripe = getStripe();
     let customerId = profile?.stripe_customer_id ?? null;
     if (!customerId) {
-      const customer = await stripe.customers.create({
-        email: user.email ?? undefined,
-        metadata: { supabase_user_id: user.id },
-      });
+      const customer = await stripe.customers.create(
+        {
+          email: user.email ?? undefined,
+          metadata: { supabase_user_id: user.id },
+        },
+        { idempotencyKey: `create-customer-${user.id}` }
+      );
       customerId = customer.id;
       const admin = createAdminClient();
       const { error } = await admin
@@ -53,10 +56,8 @@ export async function POST() {
     });
     if (!session.url) throw new Error("checkout session has no url");
     return NextResponse.json({ url: session.url });
-  } catch (e: any) {
-    return NextResponse.json(
-      { error: e?.message ?? "checkout failed" },
-      { status: 500 }
-    );
+  } catch (e) {
+    console.error("[stripe/checkout]", e);
+    return NextResponse.json({ error: "checkout failed" }, { status: 500 });
   }
 }
