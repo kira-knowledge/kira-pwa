@@ -1,5 +1,6 @@
 "use client";
 import { useEffect, useState } from "react";
+import { useRouter } from "next/navigation";
 
 import styles from "./category.module.css";
 import shared from "../../shared.module.css";
@@ -9,8 +10,11 @@ import CategoryPills from "../../../components/CategoryPills";
 import PostCard, { PostItem } from "../../../components/PostCard";
 import { filterByCategory } from "../../../lib/categoryFilter";
 
+const PREVIEW = 5;
+
 export default function CategoryViewer({ params }: { params: { name: string } }) {
   const name = decodeURIComponent(params.name);
+  const router = useRouter();
   const [items, setItems] = useState<PostItem[] | null>(null);
   const [stale, setStale] = useState(false);
 
@@ -47,10 +51,18 @@ export default function CategoryViewer({ params }: { params: { name: string } })
         </p>
       )}
       <div className={shared.cardList}>
-        {items?.map((it) => (
+        {items?.slice(0, PREVIEW).map((it) => (
           <PostCard key={it.id} item={it} />
         ))}
       </div>
+      {items && items.length > PREVIEW && (
+        <button
+          className={styles.viewAll}
+          onClick={() => router.push(`/category/${encodeURIComponent(name)}/all`)}
+        >
+          View all ({items.length}) &rarr;
+        </button>
+      )}
 
       <h2 className={shared.sectionTitle}>Explore other categories</h2>
       <CategoryPills />
