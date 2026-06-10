@@ -91,3 +91,10 @@
   outline: 2px solid var(--navy);
   outline-offset: 2px;
 }
+
+.error {
+  margin-top: 10px;
+  text-align: center;
+  font-size: 13px;
+  color: #d4332b;
+}
