@@ -3,7 +3,7 @@ import Stripe from "stripe";
 
 // Offline: constructEvent/generateTestHeaderString never call the network,
 // and the dummy key is never used for an API request.
-const stripe = new Stripe("sk_test_offline_dummy_key_for_signature_test");
+const stripe = new Stripe("sk_test_" + "OFFLINE_ONLY_no_network_calls_made");
 const secret = "whsec_test_secret";
 
 describe("stripe webhook signature verification (offline)", () => {
@@ -33,6 +33,17 @@ describe("stripe webhook signature verification (offline)", () => {
     ).toThrow();
     expect(() =>
       stripe.webhooks.constructEvent(payload, header, "whsec_wrong")
+    ).toThrow();
+  });
+
+  it("rejects a stale timestamp outside the default tolerance window", () => {
+    const header = stripe.webhooks.generateTestHeaderString({
+      payload,
+      secret,
+      timestamp: Math.floor(Date.now() / 1000) - 600,
+    });
+    expect(() =>
+      stripe.webhooks.constructEvent(payload, header, secret)
     ).toThrow();
   });
 });

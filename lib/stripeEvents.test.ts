@@ -104,4 +104,35 @@ describe("handleStripeEvent", () => {
     await handleStripeEvent(event("invoice.paid", { id: "in_1" }), store);
     expect(calls).toEqual([]);
   });
+
+  it("checkout.session.completed with no_payment_required → no write", async () => {
+    const { store, calls } = fakeStore();
+    await handleStripeEvent(
+      event("checkout.session.completed", {
+        payment_status: "no_payment_required",
+        client_reference_id: "user-1",
+      }),
+      store
+    );
+    expect(calls).toEqual([]);
+  });
+
+  it("subscription events without a customer id → no write, no throw", async () => {
+    const { store, calls } = fakeStore();
+    await handleStripeEvent(
+      event("customer.subscription.updated", { customer: null, status: "active" }),
+      store
+    );
+    await handleStripeEvent(
+      event("customer.subscription.deleted", {}),
+      store
+    );
+    expect(calls).toEqual([]);
+  });
+
+  it("malformed event without data → no write, no throw", async () => {
+    const { store, calls } = fakeStore();
+    await handleStripeEvent({ type: "checkout.session.completed" } as any, store);
+    expect(calls).toEqual([]);
+  });
 });

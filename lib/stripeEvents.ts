@@ -19,7 +19,7 @@ export type PlanStore = {
 
 export type StripeEventLike = {
   type: string;
-  data: { object: any };
+  data?: { object: any };
 };
 
 // Maps a verified Stripe event to a profiles write. Idempotent: every write
@@ -28,7 +28,7 @@ export async function handleStripeEvent(
   event: StripeEventLike,
   store: PlanStore
 ): Promise<void> {
-  const obj = event.data.object;
+  const obj = event.data?.object;
   switch (event.type) {
     case "checkout.session.completed": {
       if (obj?.payment_status === "paid" && obj?.client_reference_id) {
