@@ -44,9 +44,6 @@ export default function SaveCard({
         )}
         <span className={styles.col}>
           <span className={styles.title}>{item.title}</span>
-          {item.summary && (
-            <span className={styles.summary}>{item.summary}</span>
-          )}
           <span className={styles.meta}>Instagram &bull; {item.author}</span>
           <span className={styles.date}>{savedLabel(item.created_at)}</span>
         </span>
