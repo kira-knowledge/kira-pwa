@@ -8,6 +8,8 @@ export function planFromSubscriptionStatus(
   return status === "active" || status === "trialing" ? "pro" : "free";
 }
 
+// Wider than CheckoutSessionLike: customer also appears on subscription objects.
+
 export type CheckoutSessionLike = {
   payment_status?: string | null;
   client_reference_id?: string | null;
@@ -36,6 +38,7 @@ export function subscriptionIdOf(session: CheckoutSessionLike): string | null {
   return typeof sub === "string" ? sub : sub.id;
 }
 
+// Wider than CheckoutSessionLike: customer also appears on subscription objects.
 export function customerIdOf(
   obj: { customer?: string | { id: string } | null } | null | undefined
 ): string | null {
@@ -46,6 +49,7 @@ export function customerIdOf(
 
 export type SubscriptionLike = {
   status?: string;
+  // start_date + cancel_at_period_end are read by the subscription detail route.
   start_date?: number;
   cancel_at_period_end?: boolean;
   current_period_end?: number;
@@ -54,7 +58,10 @@ export type SubscriptionLike = {
 
 // Stripe moved current_period_end from the subscription to its items in
 // newer API versions — check the item first, fall back to the legacy field.
-export function renewalUnix(sub: SubscriptionLike): number | null {
+export function renewalUnix(
+  sub: SubscriptionLike | null | undefined
+): number | null {
+  if (!sub) return null;
   return (
     sub.items?.data?.[0]?.current_period_end ?? sub.current_period_end ?? null
   );
