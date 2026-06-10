@@ -57,7 +57,7 @@ export default function SharePage() {
       {(phase === "nolink" || phase === "error") && (
         <div className={styles.confirm}>
           <div className={styles.big}>
-            {phase === "nolink" ? "No Instagram link found" : "Couldn&apos;t save"}
+            {phase === "nolink" ? "No Instagram link found" : "Couldn&rsquo;t save"}
           </div>
           <a className={styles.link} href="/">Open KIRA →</a>
         </div>
