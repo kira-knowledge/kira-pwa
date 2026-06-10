@@ -1,14 +1,14 @@
 "use client";
 import { useRouter } from "next/navigation";
 import styles from "./BottomNav.module.css";
-import { CategoriesIcon, HistoryIcon, HomeIcon } from "./icons/Icons";
+import { KnowledgeIcon, HistoryIcon, HomeIcon } from "./icons/Icons";
 
 type Tab = "history" | "home" | "categories";
 
 const TABS = [
   { tab: "history" as Tab, href: "/history", label: "History", Icon: HistoryIcon },
   { tab: "home" as Tab, href: "/", label: "Home", Icon: HomeIcon },
-  { tab: "categories" as Tab, href: "/categories", label: "Categories", Icon: CategoriesIcon },
+  { tab: "categories" as Tab, href: "/categories", label: "Knowledge", Icon: KnowledgeIcon },
 ];
 
 export default function BottomNav({ active }: { active?: Tab }) {
