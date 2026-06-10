@@ -1,0 +1,93 @@
+/* Upgrade page — sits on the global gradient (no background override) */
+
+.wrap {
+  max-width: 480px;
+  margin: 0 auto;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  padding: 48px 24px 0;
+}
+
+.back {
+  background: none;
+  border: none;
+  color: var(--navy);
+  font-size: 28px;
+  line-height: 1;
+  cursor: pointer;
+  padding: 0;
+  align-self: flex-start;
+  margin-bottom: 8px;
+}
+
+.back:focus-visible {
+  outline: 2px solid var(--navy);
+  outline-offset: 2px;
+}
+
+.title {
+  color: var(--navy-deep);
+  font-size: 32px;
+  font-weight: 700;
+  margin: 16px 0 0;
+  text-align: center;
+}
+
+.subtitle {
+  color: var(--navy);
+  font-size: 18px;
+  font-weight: 600;
+  margin: 16px 0 0;
+}
+
+.lead {
+  color: var(--ink);
+  font-size: 14px;
+  margin: 12px 0 0;
+  line-height: 1.5;
+}
+
+.list {
+  list-style: none;
+  padding: 0;
+  margin: 16px 0 0;
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+.item {
+  display: flex;
+  flex-direction: row;
+  align-items: flex-start;
+  gap: 10px;
+  color: var(--ink);
+  font-size: 14px;
+  line-height: 1.45;
+}
+
+.check {
+  color: var(--navy);
+  font-weight: 700;
+  flex-shrink: 0;
+}
+
+.cta {
+  background: var(--red);
+  color: #fff;
+  border-radius: 10px;
+  padding: 14px;
+  width: 100%;
+  border: none;
+  font-weight: 600;
+  font-size: 16px;
+  margin-top: auto;
+  margin-bottom: 48px;
+  cursor: pointer;
+}
+
+.cta:focus-visible {
+  outline: 2px solid var(--navy);
+  outline-offset: 2px;
+}
