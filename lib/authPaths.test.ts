@@ -6,6 +6,14 @@ describe("isPublicPath", () => {
     expect(isPublicPath("/login")).toBe(true);
     expect(isPublicPath("/login/whatever")).toBe(true);
   });
+  it("login and signup are public", () => {
+    expect(isPublicPath("/login")).toBe(true);
+    expect(isPublicPath("/signup")).toBe(true);
+  });
+  it("everything else is gated", () => {
+    expect(isPublicPath("/")).toBe(false);
+    expect(isPublicPath("/profile")).toBe(false);
+  });
   it("treats app pages as non-public", () => {
     expect(isPublicPath("/")).toBe(false);
     expect(isPublicPath("/chat")).toBe(false);
