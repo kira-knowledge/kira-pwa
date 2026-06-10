@@ -34,7 +34,7 @@ export default function Splash() {
 
   if (phase === "hidden") return null;
   return (
-    <div className={phase === "leaving" ? `${styles.splash} ${styles.leaving}` : styles.splash} aria-hidden>
+    <div className={phase === "leaving" ? `${styles.splash} ${styles.leaving}` : styles.splash} aria-hidden="true">
       <div className={styles.content}>
         <h1 className={styles.title}>Welcome to KIRA!</h1>
         <div className={styles.mark}>
