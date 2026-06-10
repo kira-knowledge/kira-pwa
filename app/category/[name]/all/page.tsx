@@ -58,9 +58,8 @@ export default function CategoryAll({ params }: { params: { name: string } }) {
         >
           ‹
         </button>
-        <h2 className={shared.sectionTitle}>{name}</h2>
+        <h2 className={shared.sectionTitle}>All saves in {name}</h2>
       </header>
-      <h2 className={shared.sectionTitle}>All saves in {name}</h2>
       {items === null && <p className={shared.muted}>Loading&hellip;</p>}
       {stale && (
         <p className={shared.muted}>
