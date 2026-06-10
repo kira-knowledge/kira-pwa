@@ -11,6 +11,8 @@
   border: 1px solid var(--red);
   border-radius: 10px;
   padding: 10px 15px;
+  /* match the search-box -> suggested-prompt vertical rhythm (15px) */
+  margin-top: 15px;
   cursor: pointer;
 }
 
@@ -24,6 +26,8 @@
   border: 1px solid var(--red);
   border-radius: 10px;
   padding: 10px 15px;
+  /* match the search-box -> suggested-prompt vertical rhythm (15px) */
+  margin-top: 15px;
   cursor: default;
 }
 
