@@ -47,7 +47,13 @@ export default function ProfilePage() {
           <span className={styles.rowHint}>Reset Password</span>
         </div>
 
-        {plan === "pro" ? (
+        {/* Wait for the plan fetch so PRO users never flash a "Free User" row. */}
+        {loading ? (
+          <div className={styles.row}>
+            <span className={styles.rowLabel}>Status</span>
+            <span className={styles.rowValue}>…</span>
+          </div>
+        ) : plan === "pro" ? (
           <button
             className={`${styles.row} ${styles.rowButton}`}
             onClick={() => router.push("/subscription")}
