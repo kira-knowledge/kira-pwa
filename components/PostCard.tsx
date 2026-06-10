@@ -1,6 +1,8 @@
 "use client";
+import { useState } from "react";
 import { useRouter } from "next/navigation";
 import styles from "./PostCard.module.css";
+import { thumbSrc } from "../lib/thumb";
 
 export type PostItem = {
   id: string;
@@ -9,11 +11,14 @@ export type PostItem = {
   tags: string[];
   author: string;
   thumbnail: string;
+  thumb_key?: string;
   source_url: string;
 };
 
 export default function PostCard({ item }: { item: PostItem }) {
   const router = useRouter();
+  const [thumbFailed, setThumbFailed] = useState(false);
+  const src = thumbSrc(item);
   const open = () => router.push(`/post/${encodeURIComponent(item.id)}`);
   return (
     <article
@@ -25,8 +30,20 @@ export default function PostCard({ item }: { item: PostItem }) {
         if (e.key === "Enter") open();
       }}
     >
-      <h2 className={styles.title}>{item.title}</h2>
-      <p className={styles.summary}>{item.summary}</p>
+      <div className={styles.row}>
+        {src && !thumbFailed && (
+          <img
+            className={styles.thumb}
+            src={src}
+            alt=""
+            onError={() => setThumbFailed(true)}
+          />
+        )}
+        <div className={styles.body}>
+          <h2 className={styles.title}>{item.title}</h2>
+          <p className={styles.summary}>{item.summary}</p>
+        </div>
+      </div>
       <div className={styles.tags}>
         {item.tags?.map((t, j) => (
           <span key={j} className={styles.tag}>

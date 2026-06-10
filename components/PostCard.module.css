@@ -47,3 +47,18 @@
   text-decoration: none;
   font-weight: 500;
 }
+.row {
+  display: flex;
+  gap: 10px;
+  margin-bottom: 4px;
+}
+.thumb {
+  width: 56px;
+  height: 56px;
+  border-radius: 8px;
+  object-fit: cover;
+  flex: none;
+}
+.body {
+  min-width: 0;
+}
