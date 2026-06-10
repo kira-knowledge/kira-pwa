@@ -71,7 +71,6 @@ export default function Splash() {
         <div className={styles.mark}>
           <KiraMark size={240} plain />
         </div>
-        <p className={styles.tagline}>Find what&rsquo;s forgotten?</p>
       </div>
     </div>
   );
