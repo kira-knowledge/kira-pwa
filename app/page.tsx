@@ -9,7 +9,7 @@ import TopBar from "../components/TopBar";
 import SearchBox from "../components/SearchBox";
 import CategoryPills, { PillTheme } from "../components/CategoryPills";
 import BottomNav from "../components/BottomNav";
-import { savedLabel } from "../lib/savedLabel";
+import SaveCard from "../components/SaveCard";
 
 type Item = {
   id: string;
@@ -19,6 +19,7 @@ type Item = {
   author: string;
   thumbnail: string;
   source_url: string;
+  thumb_key?: string;
   created_at: string;
 };
 
@@ -96,15 +97,11 @@ export default function Library() {
       )}
       <div className={shared.cardList}>
         {items?.slice(0, 3).map((it) => (
-          <button
+          <SaveCard
             key={it.id}
+            item={it}
             className={`${shared.card} ${styles.saveCard}`}
-            onClick={() => router.push(`/post/${encodeURIComponent(it.id)}`)}
-          >
-            <span className={styles.saveTitle}>{it.title}</span>
-            <span className={styles.saveMeta}>Instagram &bull; {it.author}</span>
-            <span className={styles.saveDate}>{savedLabel(it.created_at)}</span>
-          </button>
+          />
         ))}
       </div>
 
