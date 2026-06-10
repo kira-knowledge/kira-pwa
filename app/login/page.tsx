@@ -20,7 +20,10 @@ function LoginInner() {
       const supabase = createClient();
       const { error } = await supabase.auth.signInWithPassword({ email, password });
       if (error) {
-        setError("Wrong email or password.");
+        // Supabase wraps network failures in an error object too (status 0 /
+        // undefined) — don't blame the user's credentials for those.
+        const badCreds = typeof error.status === "number" && error.status >= 400 && error.status < 500;
+        setError(badCreds ? "Wrong email or password." : "Can't sign in right now — try again.");
         setBusy(false);
         return;
       }
