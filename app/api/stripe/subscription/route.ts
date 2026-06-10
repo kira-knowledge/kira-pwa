@@ -44,7 +44,9 @@ export async function GET() {
       status: sub.status,
       startDate: toIso(sub.start_date ?? null),
       nextRenewal: toIso(renewalUnix(sub)),
-      cancelAtPeriodEnd: Boolean(sub.cancel_at_period_end),
+      // Newer Stripe API versions express a portal "cancel at period end" as
+      // a cancel_at timestamp; the boolean stays false. Treat either as set.
+      cancelAtPeriodEnd: Boolean(sub.cancel_at_period_end || sub.cancel_at),
       priceUsd: typeof unitAmount === "number" ? unitAmount / 100 : 2,
     });
   } catch (e) {
