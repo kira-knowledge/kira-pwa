@@ -38,13 +38,6 @@ export default function SharePage() {
     return () => clearTimeout(t);
   }, [phase]);
 
-  const text: Record<Phase, string> = {
-    saving: "Saving to KIRA…",
-    saved: "Saved ✓",
-    nolink: "No Instagram link found",
-    error: "Couldn't save",
-  };
-
   return (
     <main className={styles.wrap}>
       {phase === "saving" && <div className={styles.big}>Saving to KIRA…</div>}
