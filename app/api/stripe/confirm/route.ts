@@ -43,7 +43,7 @@ export async function POST(req: Request) {
     });
     return NextResponse.json({ plan: "pro" });
   } catch (e) {
-    console.error("[stripe/confirm]", e);
+    console.error("[stripe/confirm]", e instanceof Error ? e.message : String(e));
     return NextResponse.json({ error: "confirm failed" }, { status: 500 });
   }
 }

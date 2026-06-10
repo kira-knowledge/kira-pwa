@@ -57,7 +57,7 @@ export async function POST() {
     if (!session.url) throw new Error("checkout session has no url");
     return NextResponse.json({ url: session.url });
   } catch (e) {
-    console.error("[stripe/checkout]", e);
+    console.error("[stripe/checkout]", e instanceof Error ? e.message : String(e));
     return NextResponse.json({ error: "checkout failed" }, { status: 500 });
   }
 }

@@ -4,17 +4,19 @@ import {
   customerIdOf,
 } from "./billing";
 
+// Only these columns may ever be written by billing flows — keeps a future
+// handler from spreading an untrusted Stripe object into the update.
+export type ProfilePatch = Partial<{
+  plan: "free" | "pro";
+  stripe_customer_id: string | null;
+  stripe_subscription_id: string | null;
+}>;
+
 // Narrow write interface so this stays pure and testable; the real
 // implementation (service-role Supabase) lives in lib/supabase/admin.ts.
 export type PlanStore = {
-  setPlanByUserId(
-    userId: string,
-    patch: Record<string, unknown>
-  ): Promise<void>;
-  setPlanByCustomerId(
-    customerId: string,
-    patch: Record<string, unknown>
-  ): Promise<void>;
+  setPlanByUserId(userId: string, patch: ProfilePatch): Promise<void>;
+  setPlanByCustomerId(customerId: string, patch: ProfilePatch): Promise<void>;
 };
 
 export type StripeEventLike = {

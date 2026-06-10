@@ -11,6 +11,8 @@ export async function POST(req: Request) {
   if (!signature) {
     return NextResponse.json({ error: "missing signature" }, { status: 400 });
   }
+  // App Router gives us the raw body via req.text() — no Pages-style
+  // bodyParser config needed (adding one would break signature verification).
   const rawBody = await req.text();
 
   let event;
@@ -29,7 +31,7 @@ export async function POST(req: Request) {
     return NextResponse.json({ received: true });
   } catch (e) {
     // 500 so Stripe retries — a plan change must never be silently dropped.
-    console.error("[stripe/webhook]", e);
+    console.error("[stripe/webhook]", e instanceof Error ? e.message : String(e));
     return NextResponse.json({ error: "webhook failed" }, { status: 500 });
   }
 }
