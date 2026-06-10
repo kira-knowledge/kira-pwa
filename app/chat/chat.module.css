@@ -161,3 +161,22 @@
   font: inherit;
   cursor: pointer;
 }
+.answerPara {
+  margin: 0 0 8px;
+}
+.answerPara:last-child {
+  margin-bottom: 0;
+}
+.answerList {
+  margin: 0 0 8px;
+  padding-left: 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+.answerList:last-child {
+  margin-bottom: 0;
+}
+.answerList li {
+  line-height: 1.5;
+}

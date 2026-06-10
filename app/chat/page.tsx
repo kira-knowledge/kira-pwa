@@ -7,7 +7,6 @@ import AnswerWithCitations from "../../components/AnswerWithCitations";
 import SourceCard from "../../components/SourceCard";
 import WebResultCard from "../../components/WebResultCard";
 import { parseDeepenResponse, WebResult } from "../../lib/deepen";
-import { splitCitations } from "../../lib/citations";
 import { ChatRecord, Citation, appendHistory, findById, loadHistory } from "../../lib/chatHistory";
 
 type ChatResponse = {
@@ -228,21 +227,11 @@ function ChatInner() {
                   ) : (
                     <>
                       {deepen.synthesis && (
-                        <p className={styles.answer}>
-                          {splitCitations(deepen.synthesis, deepen.results).map((seg, i) =>
-                            seg.citation ? (
-                              <a
-                                key={i}
-                                href={`#web-source-${seg.citation.n}`}
-                                className={styles.citeMark}
-                              >
-                                {seg.text}
-                              </a>
-                            ) : (
-                              <span key={i}>{seg.text}</span>
-                            )
-                          )}
-                        </p>
+                        <AnswerWithCitations
+                          answer={deepen.synthesis}
+                          citations={deepen.results}
+                          anchorPrefix="web-source"
+                        />
                       )}
                       {deepen.results.map((r) => (
                         <WebResultCard key={r.n} result={r} />

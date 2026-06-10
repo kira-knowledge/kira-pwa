@@ -1,27 +1,57 @@
 "use client";
-import { Citation } from "../lib/chatHistory";
 import { splitCitations } from "../lib/citations";
+import { parseAnswerBlocks } from "../lib/answerFormat";
 import styles from "../app/chat/chat.module.css";
 
-export default function AnswerWithCitations({
+export default function AnswerWithCitations<T extends { n: number }>({
   answer,
   citations,
+  anchorPrefix = "source",
 }: {
   answer: string;
-  citations: Citation[];
+  citations: T[];
+  anchorPrefix?: string;
 }) {
-  const segments = splitCitations(answer, citations);
+  const blocks = parseAnswerBlocks(answer);
+
+  const renderText = (text: string, key: string) =>
+    splitCitations(text, citations).map((seg, i) =>
+      seg.citation ? (
+        <a
+          key={`${key}-${i}`}
+          href={`#${anchorPrefix}-${seg.citation.n}`}
+          className={styles.citeMark}
+        >
+          {seg.text}
+        </a>
+      ) : (
+        <span key={`${key}-${i}`}>{seg.text}</span>
+      )
+    );
+
   return (
-    <p className={styles.answer}>
-      {segments.map((seg, i) =>
-        seg.citation ? (
-          <a key={i} href={`#source-${seg.citation.n}`} className={styles.citeMark}>
-            {seg.text}
-          </a>
+    <div className={styles.answer}>
+      {blocks.map((b, bi) => {
+        if (b.type === "para") {
+          return (
+            <p key={bi} className={styles.answerPara}>
+              {renderText(b.text, `p${bi}`)}
+            </p>
+          );
+        }
+        const items = b.items.map((it, ii) => (
+          <li key={ii}>{renderText(it, `l${bi}-${ii}`)}</li>
+        ));
+        return b.ordered ? (
+          <ol key={bi} className={styles.answerList}>
+            {items}
+          </ol>
         ) : (
-          <span key={i}>{seg.text}</span>
-        )
-      )}
-    </p>
+          <ul key={bi} className={styles.answerList}>
+            {items}
+          </ul>
+        );
+      })}
+    </div>
   );
 }
