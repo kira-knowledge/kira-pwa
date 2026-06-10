@@ -6,6 +6,7 @@ import {
   EditState, setSummary, setInsight, addInsight, removeInsight,
   addTag, removeTag, toPatch,
 } from "../../../lib/postEdit";
+import { primaryCategory } from "../../../lib/primaryCategory";
 import styles from "./post.module.css";
 
 type Item = {
@@ -28,11 +29,16 @@ export default function PostViewer({ params }: { params: { id: string } }) {
   const [tagDraft, setTagDraft] = useState("");
   const [status, setStatus] = useState<SaveStatus>("idle");
   const [notFound, setNotFound] = useState(false);
+  const [category, setCategory] = useState<string | null>(null);
 
   useEffect(() => {
-    fetch("/api/library", { cache: "no-store" })
-      .then((r) => r.json())
-      .then((all: Item[]) => {
+    (async () => {
+      try {
+        const [lr, tr] = await Promise.all([
+          fetch("/api/library", { cache: "no-store" }),
+          fetch("/api/themes", { cache: "no-store" }),
+        ]);
+        const all: Item[] = await lr.json();
         const found = Array.isArray(all) ? all.find((x) => x.id === id) : undefined;
         if (!found) {
           setNotFound(true);
@@ -44,8 +50,16 @@ export default function PostViewer({ params }: { params: { id: string } }) {
           key_insights: found.key_insights ?? [],
           tags: found.tags ?? [],
         });
-      })
-      .catch(() => setNotFound(true));
+        try {
+          const td = await tr.json();
+          setCategory(primaryCategory(td?.themes ?? [], found.source_url));
+        } catch {
+          setCategory(null);
+        }
+      } catch {
+        setNotFound(true);
+      }
+    })();
   }, [id]);
 
   async function save() {
@@ -93,6 +107,14 @@ export default function PostViewer({ params }: { params: { id: string } }) {
           Source ↗
         </a>
       </header>
+      {category && (
+        <button
+          className={styles.categoryChip}
+          onClick={() => router.push(`/category/${encodeURIComponent(category)}`)}
+        >
+          {category}
+        </button>
+      )}
       <h1 className={styles.title}>{item.title}</h1>
 
       <label className={styles.label}>Summary</label>
