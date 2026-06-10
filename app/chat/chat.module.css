@@ -151,3 +151,13 @@
 .webBadge { font-size: 12px; }
 .webMeta { color: #2b7a8a; font-size: 12px; margin-top: 2px; }
 .webSnippet { color: var(--muted); font-size: 13px; margin-top: 4px; line-height: 1.4; }
+.history {
+  margin-left: auto;
+  background: none;
+  border: 1px solid var(--border);
+  color: var(--ink);
+  border-radius: 8px;
+  padding: 4px 12px;
+  font: inherit;
+  cursor: pointer;
+}

@@ -146,6 +146,9 @@ function ChatInner() {
       <header className={styles.header}>
         <button className={styles.back} onClick={() => router.push("/")}>←</button>
         <h1 className={styles.title}>{title}</h1>
+        <button className={styles.history} onClick={() => router.push("/history")}>
+          History
+        </button>
       </header>
 
       {status === "idle" && (
