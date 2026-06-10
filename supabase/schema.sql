@@ -38,3 +38,10 @@ drop trigger if exists on_auth_user_created on auth.users;
 create trigger on_auth_user_created
   after insert on auth.users
   for each row execute procedure public.handle_new_user();
+
+-- Iteration 12 (Stripe paywall): link profiles to Stripe. plan stays the
+-- single source of truth for gating; these are written server-side only
+-- (service role) — RLS still blocks client writes.
+alter table public.profiles
+  add column if not exists stripe_customer_id text,
+  add column if not exists stripe_subscription_id text;
