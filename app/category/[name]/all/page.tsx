@@ -19,6 +19,7 @@ export default function CategoryAll({ params }: { params: { name: string } }) {
   const [page, setPage] = useState(1);
 
   useEffect(() => {
+    setPage(1);
     (async () => {
       try {
         const [tr, lr] = await Promise.all([
